@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Child's Health History – Mukta Child Health Hub</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpg" />
+
+  <!-- Google Fonts: Quicksand & Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Back Navigation Top Bar -->
+  <div class="subpage-nav-bar">
+    <div class="container subpage-nav-container">
+      <a href="index.html" class="btn-back-hub">
+        &larr; Back to Health Hub
+      </a>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
+        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subpage Header Banner -->
+  <div class="subpage-hero-banner" style="background: linear-gradient(135deg, #F0EAFF 0%, #E5F4FF 100%);">
+    <div class="container">
+      <div class="section-tag tag-lavender">📜 Permanent Historical Records</div>
+      <h1 class="subpage-hero-title">Every Little Step, Every Health Milestone</h1>
+      <p class="subpage-hero-sub">Revisit and compare your child's previous health records anytime. Filter across yesterday, last week, last month, or custom ranges.</p>
+    </div>
+  </div>
+
+  <main class="section">
+    <div class="container">
+      <!-- History Control Toolbar -->
+      <div class="history-toolbar-card">
+        <div class="toolbar-top-row">
+          <!-- Time Presets Filter -->
+          <div class="preset-filters-wrap">
+            <span class="toolbar-label">Time Range:</span>
+            <button class="filter-pill-small active" data-range="all" onclick="setMasterHistoryFilter('all', this)">All Records</button>
+            <button class="filter-pill-small" data-range="yesterday" onclick="setMasterHistoryFilter('yesterday', this)">Yesterday</button>
+            <button class="filter-pill-small" data-range="last_7_days" onclick="setMasterHistoryFilter('last_7_days', this)">Last 7 Days</button>
+            <button class="filter-pill-small" data-range="last_30_days" onclick="setMasterHistoryFilter('last_30_days', this)">Last 30 Days</button>
+            <button class="filter-pill-small" data-range="last_3_months" onclick="setMasterHistoryFilter('last_3_months', this)">Last 3 Months</button>
+            <button class="filter-pill-small" data-range="last_6_months" onclick="setMasterHistoryFilter('last_6_months', this)">Last 6 Months</button>
+            <button class="filter-pill-small" data-range="last_year" onclick="setMasterHistoryFilter('last_year', this)">Last 1 Year</button>
+          </div>
+
+          <!-- Export Actions -->
+          <div class="toolbar-actions">
+            <button class="btn-pill-outline btn-sm" onclick="exportFullHistory()">📥 Export Full History (CSV)</button>
+          </div>
+        </div>
+
+        <!-- Category Filters & Search -->
+        <div class="toolbar-bottom-row">
+          <div class="category-filters-wrap">
+            <span class="toolbar-label">Category:</span>
+            <button class="cat-filter-btn active" data-hcat="all" onclick="setMasterHistoryCategory('all', this)">All Categories</button>
+            <button class="cat-filter-btn" data-hcat="growth" onclick="setMasterHistoryCategory('growth', this)">📈 Growth</button>
+            <button class="cat-filter-btn" data-hcat="vaccination" onclick="setMasterHistoryCategory('vaccination', this)">💉 Vaccines</button>
+            <button class="cat-filter-btn" data-hcat="symptom" onclick="setMasterHistoryCategory('symptom', this)">🩺 Symptoms</button>
+            <button class="cat-filter-btn" data-hcat="milestone" onclick="setMasterHistoryCategory('milestone', this)">🌱 Milestones</button>
+            <button class="cat-filter-btn" data-hcat="nutrition" onclick="setMasterHistoryCategory('nutrition', this)">🥗 Nutrition</button>
+            <button class="cat-filter-btn" data-hcat="document" onclick="setMasterHistoryCategory('document', this)">🪪 Documents</button>
+            <button class="cat-filter-btn" data-hcat="appointment" onclick="setMasterHistoryCategory('appointment', this)">📅 Appointments</button>
+          </div>
+
+          <div class="history-search-wrap">
+            <input type="text" id="history-search-input" class="clean-input input-sm" placeholder="🔍 Search records..." oninput="handleHistorySearch(this.value)" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Master Activity Timeline Container -->
+      <div class="master-timeline-wrapper" id="master-timeline-container">
+        <!-- Rendered by app.js -->
+        <div class="empty-state">Loading complete health history...</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="clean-footer">
+    <div class="container footer-bottom-container">
+      <div>© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+    </div>
+  </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+

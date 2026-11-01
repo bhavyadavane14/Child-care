@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "server.js" },
+    { "src": "/admin", "dest": "admin.html" },
+    { "src": "/admin.html", "dest": "admin.html" },
+    { "src": "/symptoms", "dest": "symptoms.html" },
+    { "src": "/symptoms.html", "dest": "symptoms.html" },
+    { "src": "/growth", "dest": "growth.html" },
+    { "src": "/growth.html", "dest": "growth.html" },
+    { "src": "/vaccines", "dest": "vaccines.html" },
+    { "src": "/vaccines.html", "dest": "vaccines.html" },
+    { "src": "/milestones", "dest": "milestones.html" },
+    { "src": "/milestones.html", "dest": "milestones.html" },
+    { "src": "/history", "dest": "history.html" },
+    { "src": "/history.html", "dest": "history.html" },
+    { "src": "/knowledge", "dest": "knowledge.html" },
+    { "src": "/knowledge.html", "dest": "knowledge.html" },
+    { "src": "/(.*\\.js)", "dest": "/$1" },
+    { "src": "/(.*\\.css)", "dest": "/$1" },
+    { "src": "/(.*\\.jpg)", "dest": "/$1" },
+    { "src": "/(.*\\.png)", "dest": "/$1" },
+    { "src": "/(.*\\.ico)", "dest": "/$1" },
+    { "src": "/", "dest": "index.html" }
+  ]
+}
+

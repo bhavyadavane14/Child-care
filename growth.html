@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Growth &amp; BMI Calculator – Mukta Child Health Hub</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpg" />
+
+  <!-- Google Fonts: Quicksand & Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Back Navigation Top Bar -->
+  <div class="subpage-nav-bar">
+    <div class="container subpage-nav-container">
+      <a href="index.html" class="btn-back-hub">
+        &larr; Back to Health Hub
+      </a>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
+        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subpage Header Banner -->
+  <div class="subpage-hero-banner" style="background: linear-gradient(135deg, #E5F4FF 0%, #E4F7ED 100%);">
+    <div class="container">
+      <div class="section-tag tag-primary">📈 Physical Growth Tracking</div>
+      <h1 class="subpage-hero-title">Growth &amp; BMI Calculator</h1>
+      <p class="subpage-hero-sub">Log height, weight, and head circumference. View interactive WHO percentile curves and historical change comparisons.</p>
+    </div>
+  </div>
+
+  <main class="section">
+    <div class="container">
+      <!-- Historical Comparison Banner -->
+      <div id="growth-comparison-banner" class="comparison-banner-wrapper"></div>
+
+      <div class="growth-layout-grid">
+        <!-- Left: Input Form Card -->
+        <div class="growth-form-card">
+          <h2 class="card-inner-title">📏 Log Measurement</h2>
+          <p class="card-inner-desc">Every measurement is permanently saved with its date. Prior records are never overwritten.</p>
+
+          <form id="growth-record-form" onsubmit="handleGrowthSubmit(event)">
+            <div class="form-row">
+              <label class="clean-label" for="growth-date">Measurement Date *</label>
+              <input type="date" id="growth-date" class="clean-input" required />
+            </div>
+
+            <div class="form-row-grid2">
+              <div>
+                <label class="clean-label" for="growth-height">Height (cm) *</label>
+                <input type="number" id="growth-height" class="clean-input" step="0.1" min="30" max="220" placeholder="e.g. 96.5" required oninput="previewBMI()" />
+              </div>
+              <div>
+                <label class="clean-label" for="growth-weight">Weight (kg) *</label>
+                <input type="number" id="growth-weight" class="clean-input" step="0.05" min="1" max="150" placeholder="e.g. 14.5" required oninput="previewBMI()" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="clean-label" for="growth-head">Head Circumference (cm) <span class="optional-tag">(optional)</span></label>
+              <input type="number" id="growth-head" class="clean-input" step="0.1" min="25" max="65" placeholder="e.g. 49.5" />
+            </div>
+
+            <div class="form-row">
+              <label class="clean-label" for="growth-notes">Clinical Notes</label>
+              <input type="text" id="growth-notes" class="clean-input" placeholder="e.g. Active, good appetite, routine visit" />
+            </div>
+
+            <!-- Live Calculated BMI Badge -->
+            <div class="bmi-live-preview" id="bmi-live-preview">
+              <div class="bmi-calc-box">
+                <span class="bmi-calc-title">Calculated BMI</span>
+                <span class="bmi-calc-value" id="live-bmi-num">--</span>
+              </div>
+              <div class="bmi-calc-box">
+                <span class="bmi-calc-title">WHO Interpretation</span>
+                <span class="bmi-calc-cat text-success" id="live-bmi-cat">Awaiting inputs</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-pill-primary w-100" style="margin-top: 16px;">
+              💾 Save Measurement to History
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: WHO Interactive Growth Chart & History Table -->
+        <div class="growth-chart-card">
+          <div class="chart-header-row">
+            <div>
+              <h3 class="card-inner-title">📊 WHO Growth Standards Chart</h3>
+              <p class="card-inner-desc">Interactive curves comparing your child against WHO 5th, 50th, and 95th percentiles.</p>
+            </div>
+            <div class="chart-metric-toggle">
+              <button class="metric-btn active" id="btn-chart-height" onclick="setChartMetric('height')">Height (cm)</button>
+              <button class="metric-btn" id="btn-chart-weight" onclick="setChartMetric('weight')">Weight (kg)</button>
+            </div>
+          </div>
+
+          <div class="canvas-container" style="height: 280px;">
+            <canvas id="growthChartCanvas"></canvas>
+          </div>
+
+          <!-- Growth History Table -->
+          <div class="growth-history-block">
+            <div class="history-block-header">
+              <h3 class="history-block-title">📋 Measurement Progression History</h3>
+              <button class="btn-pill-outline btn-sm" onclick="exportGrowthHistory()">📥 Export CSV</button>
+            </div>
+
+            <div class="table-responsive-wrapper">
+              <table class="clean-history-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Age</th>
+                    <th>Height</th>
+                    <th>Weight</th>
+                    <th>Head Circ.</th>
+                    <th>BMI</th>
+                  </tr>
+                </thead>
+                <tbody id="growth-history-tbody">
+                  <tr>
+                    <td colspan="6" class="text-center text-muted">Loading growth progression...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="clean-footer">
+    <div class="container footer-bottom-container">
+      <div>© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+    </div>
+  </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+

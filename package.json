@@ -1,0 +1,26 @@
+{
+  "name": "mukta-child-health-hub",
+  "version": "2.0.0",
+  "description": "Mukta Child Health Hub – A Digital Health Companion for Parents & Children by Mukta Children Hospital, Amravati",
+  "main": "server.js",
+  "scripts": {
+    "postinstall": "npm install node-fetch@2.6.7",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "pediatric",
+    "children-health",
+    "vaccination-tracker",
+    "growth-tracker",
+    "healthcare"
+  ],
+  "author": "Mukta Children Hospital, Amravati",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}

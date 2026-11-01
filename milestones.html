@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development Milestones – Mukta Child Health Hub</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpg" />
+
+  <!-- Google Fonts: Quicksand & Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Back Navigation Top Bar -->
+  <div class="subpage-nav-bar">
+    <div class="container subpage-nav-container">
+      <a href="index.html" class="btn-back-hub">
+        &larr; Back to Health Hub
+      </a>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
+        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subpage Header Banner -->
+  <div class="subpage-hero-banner" style="background: linear-gradient(135deg, #FFF5D8 0%, #E5F4FF 100%);">
+    <div class="container">
+      <div class="section-tag tag-yellow">🌱 Developmental Progress</div>
+      <h1 class="subpage-hero-title">Development Milestones</h1>
+      <p class="subpage-hero-sub">Celebrate every little milestone as your child grows, learns, and explores the world across motor, speech, and social domains.</p>
+    </div>
+  </div>
+
+  <main class="section">
+    <div class="container">
+      <!-- Age Stage Navigator -->
+      <div class="milestone-stages-bar" id="milestone-age-pills">
+        <!-- Rendered by app.js -->
+      </div>
+
+      <!-- Milestone Stage Content Card -->
+      <div class="milestone-content-card">
+        <div class="stage-info-header">
+          <div>
+            <h3 class="stage-title" id="stage-title-text">Stage: 18 - 24 Months</h3>
+            <p class="stage-desc" id="stage-desc-text">Curious Toddlerhood: Walking steadily, babbling words, stacking blocks &amp; mimicking adults.</p>
+          </div>
+          <div class="stage-progress-badge">
+            <span class="prog-pct" id="stage-prog-pct">100%</span>
+            <small>Observed</small>
+          </div>
+        </div>
+
+        <!-- Four Domain Cards Grid -->
+        <div class="milestone-domains-grid">
+          <!-- Motor Skills -->
+          <div class="domain-card domain-motor">
+            <div class="domain-header">
+              <span class="domain-icon">🏃‍♂️</span>
+              <h4 class="domain-name">Gross &amp; Fine Motor</h4>
+            </div>
+            <div class="domain-checklist" id="domain-motor-list"></div>
+          </div>
+
+          <!-- Social & Emotional -->
+          <div class="domain-card domain-social">
+            <div class="domain-header">
+              <span class="domain-icon">💖</span>
+              <h4 class="domain-name">Social &amp; Emotional</h4>
+            </div>
+            <div class="domain-checklist" id="domain-social-list"></div>
+          </div>
+
+          <!-- Speech & Communication -->
+          <div class="domain-card domain-comm">
+            <div class="domain-header">
+              <span class="domain-icon">💬</span>
+              <h4 class="domain-name">Speech &amp; Language</h4>
+            </div>
+            <div class="domain-checklist" id="domain-comm-list"></div>
+          </div>
+
+          <!-- Cognitive & Learning -->
+          <div class="domain-card domain-cogn">
+            <div class="domain-header">
+              <span class="domain-icon">🧩</span>
+              <h4 class="domain-name">Cognitive &amp; Play</h4>
+            </div>
+            <div class="domain-checklist" id="domain-cogn-list"></div>
+          </div>
+        </div>
+
+        <!-- Gentle Advice Notice -->
+        <div class="gentle-milestone-advice">
+          <span>💡</span>
+          <div>
+            <strong>Every child develops at their own pace:</strong> Mild variations of a few weeks or months are very normal. If your child has not yet observed multiple milestones for their age, speak with <strong>Dr. Nitin Seth</strong> during your next routine OPD checkup.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="clean-footer">
+    <div class="container footer-bottom-container">
+      <div>© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+    </div>
+  </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+

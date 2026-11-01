@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parenting Knowledge Centre – Mukta Child Health Hub</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpg" />
+
+  <!-- Google Fonts: Quicksand & Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Back Navigation Top Bar -->
+  <div class="subpage-nav-bar">
+    <div class="container subpage-nav-container">
+      <a href="index.html" class="btn-back-hub">
+        &larr; Back to Health Hub
+      </a>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
+        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subpage Header Banner -->
+  <div class="subpage-hero-banner" style="background: linear-gradient(135deg, #FFF5D8 0%, #FFE9EF 100%);">
+    <div class="container">
+      <div class="section-tag tag-yellow">📚 Doctor-Reviewed Guides</div>
+      <h1 class="subpage-hero-title">Parenting Knowledge Centre</h1>
+      <p class="subpage-hero-sub">Pediatrician-authored healthcare guidance, fever management tips, sleep hygiene, and feeding advice for parents.</p>
+    </div>
+  </div>
+
+  <main class="section">
+    <div class="container">
+      <!-- Category Filter Pills -->
+      <div class="knowledge-categories-bar" id="knowledge-cat-bar">
+        <button class="cat-pill active" data-cat="all" onclick="filterArticles('all', this)">All Topics</button>
+        <button class="cat-pill" data-cat="Newborn Care" onclick="filterArticles('Newborn Care', this)">Newborn Care</button>
+        <button class="cat-pill" data-cat="Child Nutrition" onclick="filterArticles('Child Nutrition', this)">Child Nutrition</button>
+        <button class="cat-pill" data-cat="Sleep & Hygiene" onclick="filterArticles('Sleep & Hygiene', this)">Sleep &amp; Hygiene</button>
+        <button class="cat-pill" data-cat="Vaccination" onclick="filterArticles('Vaccination', this)">Vaccination</button>
+        <button class="cat-pill" data-cat="Child Development" onclick="filterArticles('Child Development', this)">Child Development</button>
+        <button class="cat-pill" data-cat="Common Illnesses" onclick="filterArticles('Common Illnesses', this)">Common Illnesses</button>
+      </div>
+
+      <!-- Articles Grid -->
+      <div class="articles-cards-grid" id="articles-container">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL: ARTICLE READER -->
+  <div class="modal-overlay" id="article-modal" onclick="handleModalBackdropClick(event, 'article-modal')">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <div>
+          <span class="section-tag tag-yellow" id="article-modal-cat">Pediatric Wellness</span>
+          <h3 class="modal-title" id="article-modal-title" style="margin-top: 6px;">Article Title</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('article-modal')">✕</button>
+      </div>
+      <div class="modal-body" id="article-modal-body">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-pill-primary" onclick="closeModal('article-modal')">Close Article</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="clean-footer">
+    <div class="container footer-bottom-container">
+      <div>© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+    </div>
+  </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+

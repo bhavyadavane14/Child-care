@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vaccination Tracker – Mukta Child Health Hub</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpg" />
+
+  <!-- Google Fonts: Quicksand & Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Back Navigation Top Bar -->
+  <div class="subpage-nav-bar">
+    <div class="container subpage-nav-container">
+      <a href="index.html" class="btn-back-hub">
+        &larr; Back to Health Hub
+      </a>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
+        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subpage Header Banner -->
+  <div class="subpage-hero-banner" style="background: linear-gradient(135deg, #E4F7ED 0%, #E5F4FF 100%);">
+    <div class="container">
+      <div class="section-tag tag-mint">💉 Immunization Schedule</div>
+      <h1 class="subpage-hero-title">Vaccination Tracker</h1>
+      <p class="subpage-hero-sub">Stay on top of your child's vaccinations with a personalized schedule aligned with the latest Indian Academy of Pediatrics (IAP) recommendations.</p>
+    </div>
+  </div>
+
+  <main class="section">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+        <!-- Filter Tabs -->
+        <div class="clean-filter-bar" style="margin-bottom: 0;">
+          <span class="filter-label">Filter Status:</span>
+          <button class="filter-chip active" data-vfilter="all" onclick="setVaccineFilter('all', this)">All Doses</button>
+          <button class="filter-chip" data-vfilter="Upcoming" onclick="setVaccineFilter('Upcoming', this)">⏰ Upcoming</button>
+          <button class="filter-chip" data-vfilter="Completed" onclick="setVaccineFilter('Completed', this)">✅ Completed</button>
+          <button class="filter-chip" data-vfilter="Overdue" onclick="setVaccineFilter('Overdue', this)">⚠️ Overdue</button>
+        </div>
+
+        <div>
+          <button class="btn-pill-outline btn-sm" onclick="exportVaccineHistory()">📥 Export Schedule (CSV)</button>
+        </div>
+      </div>
+
+      <!-- Quick Vaccine Status Stats -->
+      <div class="vaccine-stats-row">
+        <div class="vstat-card bg-baby-blue">
+          <div class="vstat-num text-primary-blue" id="v-stat-total">24</div>
+          <div class="vstat-label">Total IAP Doses</div>
+        </div>
+        <div class="vstat-card bg-mint-green">
+          <div class="vstat-num text-success" id="v-stat-completed">0</div>
+          <div class="vstat-label">Completed ✅</div>
+        </div>
+        <div class="vstat-card bg-soft-yellow">
+          <div class="vstat-num text-warning" id="v-stat-upcoming">0</div>
+          <div class="vstat-label">Upcoming ⏰</div>
+        </div>
+        <div class="vstat-card bg-pastel-pink">
+          <div class="vstat-num text-danger" id="v-stat-overdue">0</div>
+          <div class="vstat-label">Overdue ⚠️</div>
+        </div>
+      </div>
+
+      <!-- Clean Vertical Timeline -->
+      <div class="clean-vaccine-timeline" id="vaccine-timeline-list">
+        <!-- Rendered by app.js -->
+        <div class="empty-state">Loading personalized vaccination timeline...</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="clean-footer">
+    <div class="container footer-bottom-container">
+      <div>© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+    </div>
+  </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
