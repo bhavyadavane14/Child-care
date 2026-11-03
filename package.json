@@ -4,7 +4,7 @@
   "description": "Mukta Child Health Hub – A Digital Health Companion for Parents & Children by Mukta Children Hospital, Amravati",
   "main": "server.js",
   "scripts": {
-    "postinstall": "npm install node-fetch@2.6.7",
+
     "start": "node server.js",
     "dev": "node server.js"
   },
