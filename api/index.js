@@ -122,7 +122,7 @@ module.exports = async (req, res) => {
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `);
         stmt.run(id, pId, full_name, dob, gender, blood_group || 'Unknown', photo_url || '👶', uhid, 'Dr. Nitin Seth');
-        db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details)')
+        db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details) VALUES (?, ?, ?, ?, ?, ?)')
           .run(`aud-${Date.now()}`, id, 'CREATE', 'CHILD_PROFILE', id, `Registered child ${full_name}`);
         return sendJSON(res, 201, { id, full_name, dob, gender, blood_group, uhid, photo_url });
       } catch (e) {
@@ -144,7 +144,7 @@ module.exports = async (req, res) => {
         'appointments'
       ];
       tables.forEach(t => db.prepare(`DELETE FROM ${t} WHERE ${t.includes('children') ? 'id' : 'child_id'} = ?`).run(id));
-      db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details)')
+      db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details) VALUES (?, ?, ?, ?, ?, ?)')
         .run(`aud-${Date.now()}`, id, 'DELETE', 'CHILD_PROFILE', id, `Deleted child profile ${id}`);
       return sendJSON(res, 200, { success: true, message: 'Child profile and history deleted successfully' });
     }
@@ -185,7 +185,7 @@ module.exports = async (req, res) => {
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `);
         stmt.run(id, child_id, measurement_date, height_cm, weight_kg, head_circ_cm || null, age_months, bmi, bmi_category || 'Healthy Weight', notes || null);
-        db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details)')
+        db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details) VALUES (?, ?, ?, ?, ?, ?)')
           .run(`aud-${Date.now()}`, child_id, 'RECORD_GROWTH', 'GROWTH', id, `Logged Height: ${height_cm}cm, Weight: ${weight_kg}kg`);
         return sendJSON(res, 201, { id, status: 'Saved to permanent database' });
       } catch (e) {
@@ -244,7 +244,7 @@ module.exports = async (req, res) => {
             `).run(id, child_id, vaccine_id, vaccine_name, safeDose, recommended_date, safeActualDate, safeStatus, safeHospital, safeDoctor, safeNotes);
           }
         }
-        db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details)')
+        db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details) VALUES (?, ?, ?, ?, ?, ?)')
           .run(`aud-${Date.now()}`, child_id, 'UPDATE_VACCINE', 'VACCINE', vaccine_id, `Updated vaccine ${vaccine_name} to ${safeStatus}`);
         return sendJSON(res, 200, { success: true });
       } catch (e) {

@@ -216,18 +216,29 @@ class DatabaseClient {
       // Cascade delete from all stores for this child
       const cascadeStores = ['growth_records', 'vaccination_records', 'symptom_records', 'milestone_records', 'medical_documents', 'nutrition_records', 'appointments'];
       for (const s of cascadeStores) {
-        const tx = this.idb.transaction(s, 'readwrite');
-        const st = tx.objectStore(s);
-        const req = st.getAll();
-        req.onsuccess = () => {
-          (req.result || []).filter(item => item.child_id === id || item.childId === id).forEach(i => st.delete(i.id));
-        };
+        try {
+          if (this.idb.objectStoreNames.contains(s)) {
+            const tx = this.idb.transaction(s, 'readwrite');
+            const st = tx.objectStore(s);
+            const req = st.getAll();
+            req.onsuccess = () => {
+              (req.result || []).filter(item => item.child_id === id || item.childId === id).forEach(i => st.delete(i.id));
+            };
+          }
+        } catch(e) {}
       }
     }
     if (!storeName) return { success: true };
-    const tx = this.idb.transaction(storeName, 'readwrite');
-    tx.objectStore(storeName).delete(id);
-    return { success: true };
+    return new Promise((resolve) => {
+      try {
+        const tx = this.idb.transaction(storeName, 'readwrite');
+        tx.objectStore(storeName).delete(id);
+        tx.oncomplete = () => resolve({ success: true });
+        tx.onerror = () => resolve({ success: false });
+      } catch (err) {
+        resolve({ success: false });
+      }
+    });
   }
 
   async getLocalHistory(params) {
@@ -382,7 +393,15 @@ async function loadChildren() {
     }
   }
 
-  appState.children = Array.isArray(serverChildren) ? serverChildren : [];
+  const uniqueChildren = [];
+  const seenIds = new Set();
+  (Array.isArray(serverChildren) ? serverChildren : []).forEach(c => {
+    if (c && c.id && !seenIds.has(c.id)) {
+      seenIds.add(c.id);
+      uniqueChildren.push(c);
+    }
+  });
+  appState.children = uniqueChildren;
 
   // Determine active child: check saved or default to first user-created child
   if (appState.children.length > 0) {
@@ -661,18 +680,46 @@ async function deleteChildProfile(childId, childName) {
   const confirmDelete = confirm(`Are you sure you want to delete the profile of "${childName}"?\n\nThis will permanently remove their records, growth charts, and history.`);
   if (!confirmDelete) return;
 
-  await dbClient.delete('/api/children', childId);
-  showToast(`Profile for ${childName} has been deleted.`, 'info');
-
-  await loadChildren();
-  if (appState.children.length > 0) {
-    switchActiveChild(appState.children[0].id);
-  } else {
-    appState.activeChildId = null;
-    localStorage.removeItem('mukta_active_child_id');
-    renderChildTabs();
-    renderActiveChildProfile();
+  // 1. Delete from Server API
+  try {
+    await dbClient.delete('/api/children', childId);
+  } catch (err) {
+    console.warn('API delete child failed:', err);
   }
+
+  // 2. Delete from Firebase Cloud Firestore if active
+  if (isFirebaseEnabled && firebaseDb) {
+    try {
+      await firebaseDb.collection('children').doc(childId).delete();
+      console.log('🔥 Deleted child from Firebase Firestore:', childId);
+    } catch (err) {
+      console.warn('Firebase child delete failed:', err);
+    }
+  }
+
+  // 3. Remove vaccine status from localStorage
+  try {
+    localStorage.removeItem(`mukta_vaccines_${childId}`);
+  } catch (err) {}
+
+  // 4. Update in-memory appState
+  appState.children = (appState.children || []).filter(c => c.id !== childId);
+
+  // 5. If deleted child was active, switch to next available child or null
+  if (appState.activeChildId === childId) {
+    if (appState.children.length > 0) {
+      appState.activeChildId = appState.children[0].id;
+      localStorage.setItem('mukta_active_child_id', appState.activeChildId);
+    } else {
+      appState.activeChildId = null;
+      localStorage.removeItem('mukta_active_child_id');
+    }
+  }
+
+  // 6. Refresh UI immediately
+  renderChildTabs();
+  renderActiveChildProfile();
+  showToast(`Profile for ${childName} has been deleted.`, 'info');
 }
 
 // ==========================================================================
