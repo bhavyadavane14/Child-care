@@ -1245,80 +1245,146 @@ async function renderVaccinationModule() {
   if (!container) return;
 
   if (!child) {
-    container.innerHTML = `<div class="empty-state">Please select or add a child profile first.</div>`;
+    container.innerHTML = `<div class="empty-state">Please select or add a child profile first from the home page.</div>`;
     return;
   }
 
-  const records = await dbClient.get('/api/vaccinations', { childId: child.id, status: appState.vaccineFilter });
-  const allRecords = await dbClient.get('/api/vaccinations', { childId: child.id });
+  // Load saved vaccination statuses from database / storage
+  const storageKey = `mukta_vaccines_${child.id}`;
+  let savedStatusMap = {};
+  try {
+    savedStatusMap = JSON.parse(localStorage.getItem(storageKey) || '{}');
+  } catch(e) {}
 
-  const total = allRecords.length || 24;
-  const completed = allRecords.filter(r => r.status === 'Completed').length;
-  const upcoming = allRecords.filter(r => r.status === 'Upcoming').length;
-  const overdue = allRecords.filter(r => r.status === 'Overdue').length;
-
-  if (document.getElementById('v-stat-total')) document.getElementById('v-stat-total').textContent = total;
-  if (document.getElementById('v-stat-completed')) document.getElementById('v-stat-completed').textContent = completed;
-  if (document.getElementById('v-stat-upcoming')) document.getElementById('v-stat-upcoming').textContent = upcoming;
-  if (document.getElementById('v-stat-overdue')) document.getElementById('v-stat-overdue').textContent = overdue;
-
-  if (!records || records.length === 0) {
-    container.innerHTML = `<div class="empty-state">No vaccines found for this filter.</div>`;
-    return;
-  }
-
-  container.innerHTML = '';
-  records.forEach(v => {
-    const isComp = v.status === 'Completed';
-    const isOverdue = v.status === 'Overdue';
-    const badgeClass = isComp ? 'bg-mint-green text-success' : (isOverdue ? 'bg-pastel-pink text-danger' : 'bg-baby-blue text-primary-blue');
-
-    const card = document.createElement('div');
-    card.className = 'v-item-card';
-    card.innerHTML = `
-      <div class="v-item-left">
-        <div class="v-check-wrap">
-          <input type="checkbox" id="chk-${v.id}" ${isComp ? 'checked' : ''} />
-        </div>
-        <div>
-          <div class="v-item-title">
-            ${v.vaccine_name} <small style="color: #0787C9;">(${v.dose_number})</small>
-            <span class="v-badge-pill ${badgeClass}">${v.status}</span>
-          </div>
-          <div class="v-item-meta">
-            Recommended: <strong>${formatDate(v.recommended_date)}</strong>
-            ${v.actual_date ? ` &bull; Administered: <strong>${formatDate(v.actual_date)}</strong>` : ''}
-            &bull; Center: ${v.hospital_details || 'Mukta Children Hospital'}
-          </div>
-        </div>
-      </div>
-      <div class="v-item-actions">
-        <span style="font-size: 0.8rem; font-weight: 700; color: ${isComp ? '#059669' : '#0787C9'};">
-          ${isComp ? '✅ Given' : '⏰ Pending'}
-        </span>
-      </div>
-    `;
-
-    card.querySelector(`#chk-${v.id}`).addEventListener('change', async (e) => {
-      const newStatus = e.target.checked ? 'Completed' : 'Upcoming';
-      const actualDate = e.target.checked ? new Date().toISOString().split('T')[0] : null;
-
-      await dbClient.post('/api/vaccinations', {
-        child_id: child.id,
-        vaccine_id: v.vaccine_id,
-        vaccine_name: v.vaccine_name,
-        dose_number: v.dose_number,
-        recommended_date: v.recommended_date,
-        actual_date: actualDate,
-        status: newStatus,
-        notes: e.target.checked ? 'Marked completed by parent' : 'Pending'
+  // Also query server/firebase records if available
+  try {
+    const apiRecords = await dbClient.get('/api/vaccinations', { childId: child.id });
+    if (Array.isArray(apiRecords) && apiRecords.length > 0) {
+      apiRecords.forEach(r => {
+        if (r.vaccine_id && r.status === 'Completed') {
+          savedStatusMap[r.vaccine_id] = true;
+        }
       });
+    }
+  } catch (e) {}
 
-      showToast(`Updated ${v.vaccine_name} to ${newStatus}`, 'success');
+  const scheduleList = (typeof OFFICIAL_IAP_USER_SCHEDULE !== 'undefined') ? OFFICIAL_IAP_USER_SCHEDULE : [];
+
+  let completedCount = 0;
+  scheduleList.forEach(item => {
+    if (savedStatusMap[item.id]) completedCount++;
+  });
+  const totalCount = scheduleList.length;
+  const upcomingCount = totalCount - completedCount;
+
+  if (document.getElementById('v-stat-total')) document.getElementById('v-stat-total').textContent = totalCount;
+  if (document.getElementById('v-stat-completed')) document.getElementById('v-stat-completed').textContent = completedCount;
+  if (document.getElementById('v-stat-upcoming')) document.getElementById('v-stat-upcoming').textContent = upcomingCount;
+  if (document.getElementById('v-stat-overdue')) document.getElementById('v-stat-overdue').textContent = 0;
+
+  // Filter items
+  const filter = appState.vaccineFilter || 'all';
+  const filteredList = scheduleList.filter(item => {
+    const isDone = !!savedStatusMap[item.id];
+    if (filter === 'Completed') return isDone;
+    if (filter === 'Upcoming' || filter === 'Overdue') return !isDone;
+    return true;
+  });
+
+  if (filteredList.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding: 40px; text-align: center; background: #fff; border-radius: 16px;">No vaccines found matching "${filter}" filter.</div>`;
+    return;
+  }
+
+  let tableHtml = `
+    <div style="overflow-x: auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 12px;">
+      <table style="width: 100%; border-collapse: separate; border-spacing: 0; font-family: inherit;">
+        <thead>
+          <tr style="background: #F1F5F9; color: #1E293B; text-align: left; font-size: 0.9rem;">
+            <th style="padding: 14px 16px; border-radius: 10px 0 0 10px; width: 80px; text-align: center;">Given?</th>
+            <th style="padding: 14px 16px; width: 140px;">Age / Milestone</th>
+            <th style="padding: 14px 16px;">Vaccines Recommended</th>
+            <th style="padding: 14px 16px;">Diseases Protected Against</th>
+            <th style="padding: 14px 16px; border-radius: 0 10px 10px 0; width: 120px; text-align: center;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  filteredList.forEach((item, index) => {
+    const isDone = !!savedStatusMap[item.id];
+    const rowBg = isDone ? '#F0FDF4' : (index % 2 === 0 ? '#FFFFFF' : '#F8FAFC');
+    tableHtml += `
+      <tr style="background: ${rowBg}; border-bottom: 1px solid #E2E8F0; transition: background 0.2s;">
+        <td style="padding: 16px; text-align: center;">
+          <input type="checkbox" id="vchk-${item.id}" ${isDone ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer; accent-color: #059669;" />
+        </td>
+        <td style="padding: 16px; font-weight: 700; color: #0284C7; font-size: 0.95rem;">
+          ${item.milestone}
+        </td>
+        <td style="padding: 16px; color: #0F172A; font-weight: 600; font-size: 0.92rem;">
+          ${item.vaccines}
+        </td>
+        <td style="padding: 16px; color: #64748B; font-size: 0.88rem;">
+          ${item.diseases}
+        </td>
+        <td style="padding: 16px; text-align: center;">
+          <span style="display: inline-block; padding: 6px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; ${isDone ? 'background: #DCFCE7; color: #15803D;' : 'background: #FEF3C7; color: #B45309;'}">
+            ${isDone ? '✅ Given' : '⏰ Pending'}
+          </span>
+        </td>
+      </tr>
+    `;
+  });
+
+  tableHtml += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  container.innerHTML = tableHtml;
+
+  // Attach change event listeners to each checkbox
+  filteredList.forEach(item => {
+    const chk = document.getElementById(`vchk-${item.id}`);
+    if (!chk) return;
+    chk.addEventListener('change', async (e) => {
+      const isChecked = e.target.checked;
+      savedStatusMap[item.id] = isChecked;
+      localStorage.setItem(storageKey, JSON.stringify(savedStatusMap));
+
+      // Sync to Firebase Cloud Firestore if active
+      if (typeof syncToFirebase === 'function') {
+        await syncToFirebase('vaccination_records', `${child.id}_${item.id}`, {
+          child_id: child.id,
+          vaccine_id: item.id,
+          milestone: item.milestone,
+          vaccine_name: item.vaccines,
+          diseases: item.diseases,
+          status: isChecked ? 'Completed' : 'Upcoming',
+          actual_date: isChecked ? new Date().toISOString().split('T')[0] : null,
+          updated_at: new Date().toISOString()
+        });
+      }
+
+      // Sync to local server DB if connected
+      try {
+        await dbClient.post('/api/vaccinations', {
+          child_id: child.id,
+          vaccine_id: item.id,
+          vaccine_name: item.vaccines,
+          dose_number: item.milestone,
+          recommended_date: new Date().toISOString().split('T')[0],
+          actual_date: isChecked ? new Date().toISOString().split('T')[0] : null,
+          status: isChecked ? 'Completed' : 'Upcoming',
+          notes: isChecked ? 'Marked given by parent' : 'Pending'
+        });
+      } catch (err) {}
+
+      showToast(isChecked ? `Marked "${item.milestone}" as Given!` : `Marked "${item.milestone}" as Pending`, isChecked ? 'success' : 'info');
       renderVaccinationModule();
     });
-
-    container.appendChild(card);
   });
 }
 

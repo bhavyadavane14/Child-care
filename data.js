@@ -3,6 +3,82 @@
  * Aligned with Indian Academy of Pediatrics (IAP) & World Health Organization (WHO) Guidelines
  */
 
+// Official IAP Immunization Schedule with Milestones and Diseases
+const OFFICIAL_IAP_USER_SCHEDULE = [
+  {
+    id: "birth",
+    milestone: "At Birth",
+    vaccines: "BCG, Hepatitis B (Birth Dose), OPV 0 (Oral Polio)",
+    diseases: "Tuberculosis, Hepatitis B, Polio"
+  },
+  {
+    id: "6w",
+    milestone: "6 Weeks",
+    vaccines: "Pentavalent-1 (DTP, Hep B, Hib), bOPV-1, fIPV-1, Rotavirus (RVV-1), PCV-1",
+    diseases: "Diphtheria, Pertussis, Tetanus, Hep B, Hib, Polio, Diarrhea, Pneumonia"
+  },
+  {
+    id: "10w",
+    milestone: "10 Weeks",
+    vaccines: "Pentavalent-2, bOPV-2, Rotavirus (RVV-2), PCV-2",
+    diseases: "Diphtheria, Pertussis, Tetanus, Hep B, Hib, Polio, Diarrhea"
+  },
+  {
+    id: "14w",
+    milestone: "14 Weeks",
+    vaccines: "Pentavalent-3, bOPV-3, fIPV-2, Rotavirus (RVV-3), PCV-3",
+    diseases: "Diphtheria, Pertussis, Tetanus, Hep B, Hib, Polio, Diarrhea"
+  },
+  {
+    id: "6m",
+    milestone: "6 Months",
+    vaccines: "Influenza (IIV) - 1st Dose (IAP recommended)",
+    diseases: "Influenza (Flu)"
+  },
+  {
+    id: "7m",
+    milestone: "7 Months",
+    vaccines: "Influenza (IIV) - 2nd Dose (IAP recommended)",
+    diseases: "Influenza (Flu)"
+  },
+  {
+    id: "6-9m",
+    milestone: "6–9 Months",
+    vaccines: "Typhoid Conjugate Vaccine (IAP recommended)",
+    diseases: "Typhoid Fever"
+  },
+  {
+    id: "9-12m",
+    milestone: "9–12 Months",
+    vaccines: "MR-1 (Measles & Rubella), JE-1 (in endemic areas), fIPV-3, PCV-Booster, Vitamin A (1st dose)",
+    diseases: "Measles, Rubella, Japanese Encephalitis, Polio, Pneumonia"
+  },
+  {
+    id: "12m",
+    milestone: "12 Months",
+    vaccines: "Hepatitis A (1st Dose) (IAP recommended)",
+    diseases: "Hepatitis A"
+  },
+  {
+    id: "15m",
+    milestone: "15 Months",
+    vaccines: "MMR-2, Varicella-1 (Chickenpox), PCV Booster (IAP recommended)",
+    diseases: "Measles, Mumps, Rubella, Chickenpox, Pneumonia"
+  },
+  {
+    id: "16-24m",
+    milestone: "16–24 Months",
+    vaccines: "DPT Booster-1, bOPV-Booster, Hib-Booster, fIPV-Booster, Hep A-2, Varicella-2, Vitamin A",
+    diseases: "Diphtheria, Pertussis, Tetanus, Polio, Hep A, Chickenpox"
+  },
+  {
+    id: "4-6y",
+    milestone: "4–6 Years",
+    vaccines: "DPT Booster-2, IPV Booster-2, MMR-3 (IAP recommended)",
+    diseases: "Diphtheria, Pertussis, Tetanus, Polio, Measles, Mumps, Rubella"
+  }
+];
+
 // IAP Advisory Committee on Vaccines and Immunization Practices (ACVIP) Schedule
 const IAP_VACCINE_SCHEDULE = [
   {
