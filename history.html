@@ -21,10 +21,16 @@
   <!-- Back Navigation Top Bar -->
   <div class="subpage-nav-bar">
     <div class="container subpage-nav-container">
-      <a href="index.html" class="btn-back-hub">
+      <a href="index.html" class="btn-back-hub" data-i18n="back_to_hub">
         &larr; Back to Health Hub
       </a>
-      <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <!-- Language Selector -->
+        <div class="lang-selector-group" role="group" aria-label="Language Selector">
+          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
+          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        </div>
         <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
         <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
       </div>
@@ -34,9 +40,9 @@
   <!-- Subpage Header Banner -->
   <div class="subpage-hero-banner" style="background: linear-gradient(135deg, #F0EAFF 0%, #E5F4FF 100%);">
     <div class="container">
-      <div class="section-tag tag-lavender">📜 Permanent Historical Records</div>
-      <h1 class="subpage-hero-title">Every Little Step, Every Health Milestone</h1>
-      <p class="subpage-hero-sub">Revisit and compare your child's previous health records anytime. Filter across yesterday, last week, last month, or custom ranges.</p>
+      <div class="section-tag tag-lavender" data-i18n="history_page_tag">📋 Clinical Records</div>
+      <h1 class="subpage-hero-title" data-i18n="history_page_title">Health Records &amp; History</h1>
+      <p class="subpage-hero-sub" data-i18n="history_page_desc">Comprehensive chronological record of growth measurements, vaccinations, and pediatric consultations.</p>
     </div>
   </div>
 
@@ -98,9 +104,10 @@
     </div>
   </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="translations.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>

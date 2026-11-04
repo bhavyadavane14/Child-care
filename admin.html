@@ -307,6 +307,12 @@
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 1rem;">
+        <!-- Language Selector -->
+        <div class="lang-selector-group" role="group" aria-label="Language Selector">
+          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
+          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        </div>
         <span id="cloud-sync-status" style="font-size: 0.8rem; font-weight: 700; color: #10B981; background: #DFF7E8; padding: 0.35rem 0.8rem; border-radius: 20px;">
           🟢 Cloud Database Active
         </span>
@@ -521,6 +527,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="translations.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 

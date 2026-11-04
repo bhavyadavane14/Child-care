@@ -1301,11 +1301,11 @@ async function renderVaccinationModule() {
       <table style="width: 100%; border-collapse: separate; border-spacing: 0; font-family: inherit;">
         <thead>
           <tr style="background: #F1F5F9; color: #1E293B; text-align: left; font-size: 0.9rem;">
-            <th style="padding: 14px 16px; border-radius: 10px 0 0 10px; width: 80px; text-align: center;">Given?</th>
-            <th style="padding: 14px 16px; width: 140px;">Age / Milestone</th>
-            <th style="padding: 14px 16px;">Vaccines Recommended</th>
-            <th style="padding: 14px 16px;">Diseases Protected Against</th>
-            <th style="padding: 14px 16px; border-radius: 0 10px 10px 0; width: 120px; text-align: center;">Status</th>
+            <th style="padding: 14px 16px; border-radius: 10px 0 0 10px; width: 80px; text-align: center;">${(typeof t === 'function' ? t('col_given') : 'Given?')}</th>
+            <th style="padding: 14px 16px; width: 140px;">${(typeof t === 'function' ? t('col_milestone') : 'Age / Milestone')}</th>
+            <th style="padding: 14px 16px;">${(typeof t === 'function' ? t('col_vaccines') : 'Vaccines Recommended')}</th>
+            <th style="padding: 14px 16px;">${(typeof t === 'function' ? t('col_diseases') : 'Diseases Protected Against')}</th>
+            <th style="padding: 14px 16px; border-radius: 0 10px 10px 0; width: 120px; text-align: center;">${(typeof t === 'function' ? t('col_status') : 'Status')}</th>
           </tr>
         </thead>
         <tbody>
@@ -1314,6 +1314,8 @@ async function renderVaccinationModule() {
   filteredList.forEach((item, index) => {
     const isDone = !!savedStatusMap[item.id];
     const rowBg = isDone ? '#F0FDF4' : (index % 2 === 0 ? '#FFFFFF' : '#F8FAFC');
+    const givenLabel = (typeof t === 'function' ? t('status_given') : '✅ Given');
+    const pendingLabel = (typeof t === 'function' ? t('status_pending') : '⏰ Pending');
     tableHtml += `
       <tr style="background: ${rowBg}; border-bottom: 1px solid #E2E8F0; transition: background 0.2s;">
         <td style="padding: 16px; text-align: center;">
@@ -1330,7 +1332,7 @@ async function renderVaccinationModule() {
         </td>
         <td style="padding: 16px; text-align: center;">
           <span style="display: inline-block; padding: 6px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; ${isDone ? 'background: #DCFCE7; color: #15803D;' : 'background: #FEF3C7; color: #B45309;'}">
-            ${isDone ? '✅ Given' : '⏰ Pending'}
+            ${isDone ? givenLabel : pendingLabel}
           </span>
         </td>
       </tr>
@@ -1792,3 +1794,9 @@ Object.assign(window, {
   showToast
 });
 
+
+// Language Change Listener for Multi-Language reactivity
+window.addEventListener('languageChanged', () => {
+  if (typeof renderActiveChildData === 'function') renderActiveChildData();
+  if (typeof renderVaccinationModule === 'function') renderVaccinationModule();
+});

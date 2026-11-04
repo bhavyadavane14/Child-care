@@ -1120,3 +1120,8 @@ const KNOWLEDGE_ARTICLES = [
     `
   }
 ];
+
+// Node environment export
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { OFFICIAL_IAP_USER_SCHEDULE, IAP_VACCINE_SCHEDULE };
+}

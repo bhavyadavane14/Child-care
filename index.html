@@ -34,17 +34,24 @@
       <a href="index.html" class="nav-brand">
         <img src="logo.jpg" alt="Mukta Child Health Hub" class="nav-logo-img" />
         <div class="nav-brand-text">
-          <span class="nav-brand-title">Mukta Child Health Hub</span>
-          <span class="nav-brand-subtitle">A Digital Health Companion</span>
+          <span class="nav-brand-title" data-i18n="brand_title">Mukta Child Health Hub</span>
+          <span class="nav-brand-subtitle" data-i18n="brand_subtitle">A Digital Health Companion</span>
         </div>
       </a>
 
       <!-- Right: Action Buttons & Hamburger -->
       <div class="nav-actions">
+        <!-- Language Selector -->
+        <div class="lang-selector-group" role="group" aria-label="Language Selector">
+          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
+          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        </div>
+
         <!-- Active Child Quick Pill -->
         <button class="nav-child-pill" id="nav-child-pill" onclick="document.getElementById('profile').scrollIntoView({ behavior: 'smooth' })">
           <span id="nav-child-avatar">👶</span>
-          <span id="nav-child-name">Select Child</span>
+          <span id="nav-child-name" data-i18n="select_child">Select Child</span>
         </button>
 
         <!-- Clean Hamburger Button -->
@@ -138,27 +145,27 @@
       <div class="hero-content">
         <div class="hero-badge">
           <span>✨</span>
-          <span>A Digital Health Companion for Parents &amp; Children</span>
+          <span data-i18n="hero_badge">A Digital Health Companion for Parents &amp; Children</span>
         </div>
 
         <h1 class="hero-title">
-          Mukta Child<br />
-          <span class="text-primary-blue">Health Hub</span>
+          <span data-i18n="hero_title_1">Mukta Child</span><br />
+          <span class="text-primary-blue" data-i18n="hero_title_2">Health Hub</span>
         </h1>
 
-        <div class="hero-tagline">
+        <div class="hero-tagline" data-i18n="hero_tagline">
           🌱 Little Steps, Healthy Futures!
         </div>
 
-        <p class="hero-desc">
+        <p class="hero-desc" data-i18n="hero_desc">
           Your child's health journey deserves special care. Track growth, manage vaccinations, explore milestones and discover trusted healthcare guidance – all in one happy place.
         </p>
 
         <div class="hero-cta-group">
-          <button class="btn-pill-primary" onclick="document.getElementById('features-overview').scrollIntoView({ behavior: 'smooth' })">
+          <button class="btn-pill-primary" onclick="document.getElementById('features-overview').scrollIntoView({ behavior: 'smooth' })" data-i18n="explore_tools_btn">
             🌟 Explore Health Tools
           </button>
-          <button class="btn-pill-outline" onclick="document.getElementById('profile').scrollIntoView({ behavior: 'smooth' })">
+          <button class="btn-pill-outline" onclick="document.getElementById('profile').scrollIntoView({ behavior: 'smooth' })" data-i18n="manage_child_btn">
             👶 Manage My Child's Health
           </button>
         </div>
@@ -167,17 +174,17 @@
         <div class="hero-stats">
           <div class="stat-box">
             <span class="stat-number">30+</span>
-            <span class="stat-label">Years of Care</span>
+            <span class="stat-label" data-i18n="stat_years">Years of Care</span>
           </div>
           <div class="stat-divider"></div>
           <div class="stat-box">
             <span class="stat-number">100%</span>
-            <span class="stat-label">IAP Aligned</span>
+            <span class="stat-label" data-i18n="stat_iap">IAP Aligned</span>
           </div>
           <div class="stat-divider"></div>
           <div class="stat-box">
-            <span class="stat-number">24/7</span>
-            <span class="stat-label">Emergency Care</span>
+            <span class="stat-number">15K+</span>
+            <span class="stat-label" data-i18n="stat_families">Happy Families</span>
           </div>
         </div>
       </div>
@@ -213,9 +220,9 @@
   <section class="section profile-section" id="profile">
     <div class="container">
       <div class="section-heading text-center">
-        <div class="section-tag tag-lavender">👶 Little One's Space</div>
-        <h2 class="section-title">Let's Get to Know Your Little One!</h2>
-        <p class="section-desc">Add your children to begin their personalized health tracking. Every measurement, symptom check, and vaccine is safely linked to their unique profile.</p>
+        <div class="section-tag tag-lavender" data-i18n="profile_section_tag">👶 Little One's Space</div>
+        <h2 class="section-title" data-i18n="profile_section_title">Let's Get to Know Your Little One!</h2>
+        <p class="section-desc" data-i18n="profile_section_desc">Add your children to begin their personalized health tracking. Every measurement and vaccine is safely linked to their unique profile.</p>
       </div>
 
       <!-- Child Profile Tabs -->
@@ -236,61 +243,69 @@
   <section class="section features-grid-section bg-light-alt" id="features-overview">
     <div class="container">
       <div class="section-heading text-center">
-        <div class="section-tag tag-primary">🌟 Pediatric Tools Suite</div>
-        <h2 class="section-title">Explore Dedicated Health Tools</h2>
-        <p class="section-desc">Click any tool below to open its dedicated page with focused, clutter-free tracking.</p>
+        <div class="section-tag tag-primary" data-i18n="tools_suite_tag">🌟 Pediatric Tools Suite</div>
+        <h2 class="section-title" data-i18n="tools_suite_title">Explore Dedicated Health Tools</h2>
+        <p class="section-desc" data-i18n="tools_suite_desc">Click any tool below to open its dedicated page with focused, clutter-free tracking.</p>
       </div>
 
       <div class="eight-cards-grid" style="grid-template-columns: repeat(3, 1fr);">
-
-
-        <!-- Card 2: Growth & BMI Calculator -->
+        <!-- Card 1: Growth & BMI Calculator -->
         <a href="growth.html" class="health-feature-card card-blue" style="text-decoration: none;">
           <div class="feature-card-icon" style="background: #E5F4FF;">📈</div>
-          <h3 class="feature-card-title">Growth &amp; BMI Calculator</h3>
-          <p class="feature-card-desc">Log height, weight, and head circumference. View interactive WHO growth percentiles, delta change comparisons, and progression trends.</p>
+          <h3 class="feature-card-title" data-i18n="card_growth_title">Growth &amp; BMI Calculator</h3>
+          <p class="feature-card-desc" data-i18n="card_growth_desc">Log height, weight, and head circumference. View interactive WHO growth percentiles, delta change comparisons, and progression trends.</p>
           <div class="feature-card-footer">
-            <span class="feature-explore-btn">Open Growth Calculator →</span>
+            <span class="feature-explore-btn" data-i18n="card_growth_btn">Open Growth Calculator →</span>
           </div>
         </a>
 
-        <!-- Card 3: Vaccination Tracker -->
+        <!-- Card 2: Vaccination Tracker -->
         <a href="vaccines.html" class="health-feature-card card-mint" style="text-decoration: none;">
           <div class="feature-card-icon" style="background: #E4F7ED;">💉</div>
-          <h3 class="feature-card-title">Vaccination Tracker</h3>
-          <p class="feature-card-desc">Personalized schedule following official Indian Academy of Pediatrics (IAP) recommendations. Mark completed doses and view overdue alerts.</p>
+          <h3 class="feature-card-title" data-i18n="card_vaccine_title">Vaccination Tracker</h3>
+          <p class="feature-card-desc" data-i18n="card_vaccine_desc">Personalized schedule following official Indian Academy of Pediatrics (IAP) recommendations. Mark completed doses and view overdue alerts.</p>
           <div class="feature-card-footer">
-            <span class="feature-explore-btn">Open Vaccine Tracker →</span>
+            <span class="feature-explore-btn" data-i18n="card_vaccine_btn">Open Vaccine Tracker →</span>
           </div>
         </a>
 
-        <!-- Card 4: Development Milestones -->
+        <!-- Card 3: Development Milestones -->
         <a href="milestones.html" class="health-feature-card card-yellow" style="text-decoration: none;">
           <div class="feature-card-icon" style="background: #FFF5D8;">🌱</div>
-          <h3 class="feature-card-title">Development Milestones</h3>
-          <p class="feature-card-desc">Track motor, social, communication, and cognitive milestones from newborn to age 5. Celebrate every tiny leap forward.</p>
+          <h3 class="feature-card-title" data-i18n="card_milestones_title">Development Milestones</h3>
+          <p class="feature-card-desc" data-i18n="card_milestones_desc">Track motor, social, communication, and cognitive milestones from newborn to age 5. Celebrate every tiny leap forward.</p>
           <div class="feature-card-footer">
-            <span class="feature-explore-btn">Open Milestones →</span>
+            <span class="feature-explore-btn" data-i18n="card_milestones_btn">Explore Milestones →</span>
           </div>
         </a>
 
-        <!-- Card 5: Health History Timeline -->
+        <!-- Card 4: Health History Timeline -->
         <a href="history.html" class="health-feature-card card-lavender" style="text-decoration: none;">
           <div class="feature-card-icon" style="background: #F0EAFF;">📜</div>
-          <h3 class="feature-card-title">My Child's Health History</h3>
-          <p class="feature-card-desc">Permanent multi-year activity timeline. Filter records across yesterday, last week, last month, or custom ranges with instant CSV export.</p>
+          <h3 class="feature-card-title" data-i18n="card_history_title">Health Records &amp; History</h3>
+          <p class="feature-card-desc" data-i18n="card_history_desc">Permanent multi-year activity timeline. Filter records across yesterday, last week, last month, or custom ranges with instant CSV export.</p>
           <div class="feature-card-footer">
-            <span class="feature-explore-btn">View Health History →</span>
+            <span class="feature-explore-btn" data-i18n="card_history_btn">View Health History →</span>
           </div>
         </a>
 
-        <!-- Card 6: Parenting Knowledge Centre -->
+        <!-- Card 5: Parenting Knowledge Centre -->
         <a href="knowledge.html" class="health-feature-card card-yellow" style="text-decoration: none;">
           <div class="feature-card-icon" style="background: #FFF5D8;">📚</div>
-          <h3 class="feature-card-title">Parenting Knowledge Centre</h3>
-          <p class="feature-card-desc">Doctor-reviewed clinical guides covering newborn care, sleep hygiene, teething, fevers, and pediatric wellness.</p>
+          <h3 class="feature-card-title" data-i18n="card_knowledge_title">Parenting Knowledge Centre</h3>
+          <p class="feature-card-desc" data-i18n="card_knowledge_desc">Doctor-reviewed clinical guides covering newborn care, sleep hygiene, teething, fevers, and pediatric wellness.</p>
           <div class="feature-card-footer">
-            <span class="feature-explore-btn">Read Pediatric Guides →</span>
+            <span class="feature-explore-btn" data-i18n="card_knowledge_btn">Read Parenting Articles →</span>
+          </div>
+        </a>
+
+        <!-- Card 6: Doctor & Staff Portal -->
+        <a href="admin.html" class="health-feature-card card-pink" style="text-decoration: none;">
+          <div class="feature-card-icon" style="background: #FFE9EF;">🩺</div>
+          <h3 class="feature-card-title" data-i18n="card_admin_title">Doctor &amp; Hospital Portal</h3>
+          <p class="feature-card-desc" data-i18n="card_admin_desc">Clinical dashboard for pediatricians to monitor registered child patients, prescribe vaccine reminders, and inspect logs.</p>
+          <div class="feature-card-footer">
+            <span class="feature-explore-btn" data-i18n="card_admin_btn">Open Doctor Portal →</span>
           </div>
         </a>
       </div>
@@ -483,10 +498,11 @@
     </div>
   </div>
 
-  <!-- Medical Data & Main Controller -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <!-- Firebase Cloud Sync, Multi-Language, Medical Data & Main Controller -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="translations.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>

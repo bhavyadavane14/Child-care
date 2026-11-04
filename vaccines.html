@@ -21,10 +21,16 @@
   <!-- Back Navigation Top Bar -->
   <div class="subpage-nav-bar">
     <div class="container subpage-nav-container">
-      <a href="index.html" class="btn-back-hub">
+      <a href="index.html" class="btn-back-hub" data-i18n="back_to_hub">
         &larr; Back to Health Hub
       </a>
-      <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <!-- Language Selector -->
+        <div class="lang-selector-group" role="group" aria-label="Language Selector">
+          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
+          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        </div>
         <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
         <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
       </div>
@@ -34,9 +40,9 @@
   <!-- Subpage Header Banner -->
   <div class="subpage-hero-banner" style="background: linear-gradient(135deg, #E4F7ED 0%, #E5F4FF 100%);">
     <div class="container">
-      <div class="section-tag tag-mint">💉 Immunization Schedule</div>
-      <h1 class="subpage-hero-title">Vaccination Tracker</h1>
-      <p class="subpage-hero-sub">Stay on top of your child's vaccinations with a personalized schedule aligned with the latest Indian Academy of Pediatrics (IAP) recommendations.</p>
+      <div class="section-tag tag-mint" data-i18n="vaccine_page_tag">💉 Immunization Schedule</div>
+      <h1 class="subpage-hero-title" data-i18n="vaccine_page_title">Vaccination Tracker</h1>
+      <p class="subpage-hero-sub" data-i18n="vaccine_page_desc">Stay on top of your child's vaccinations with a personalized schedule aligned with the latest Indian Academy of Pediatrics (IAP) recommendations.</p>
     </div>
   </div>
 
@@ -45,35 +51,35 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
         <!-- Filter Tabs -->
         <div class="clean-filter-bar" style="margin-bottom: 0;">
-          <span class="filter-label">Filter Status:</span>
-          <button class="filter-chip active" data-vfilter="all" onclick="setVaccineFilter('all', this)">All Doses</button>
-          <button class="filter-chip" data-vfilter="Upcoming" onclick="setVaccineFilter('Upcoming', this)">⏰ Upcoming</button>
-          <button class="filter-chip" data-vfilter="Completed" onclick="setVaccineFilter('Completed', this)">✅ Completed</button>
-          <button class="filter-chip" data-vfilter="Overdue" onclick="setVaccineFilter('Overdue', this)">⚠️ Overdue</button>
+          <span class="filter-label" data-i18n="filter_status_label">Filter Status:</span>
+          <button class="filter-chip active" data-vfilter="all" onclick="setVaccineFilter('all', this)" data-i18n="filter_all">All Doses</button>
+          <button class="filter-chip" data-vfilter="Upcoming" onclick="setVaccineFilter('Upcoming', this)" data-i18n="filter_upcoming">⏰ Upcoming</button>
+          <button class="filter-chip" data-vfilter="Completed" onclick="setVaccineFilter('Completed', this)" data-i18n="filter_completed">✅ Completed</button>
+          <button class="filter-chip" data-vfilter="Overdue" onclick="setVaccineFilter('Overdue', this)" data-i18n="filter_overdue">⚠️ Overdue</button>
         </div>
 
         <div>
-          <button class="btn-pill-outline btn-sm" onclick="exportVaccineHistory()">📥 Export Schedule (CSV)</button>
+          <button class="btn-pill-outline btn-sm" onclick="exportVaccineHistory()" data-i18n="export_csv_btn">📥 Export Schedule (CSV)</button>
         </div>
       </div>
 
       <!-- Quick Vaccine Status Stats -->
       <div class="vaccine-stats-row">
         <div class="vstat-card bg-baby-blue">
-          <div class="vstat-num text-primary-blue" id="v-stat-total">24</div>
-          <div class="vstat-label">Total IAP Doses</div>
+          <div class="vstat-num text-primary-blue" id="v-stat-total">12</div>
+          <div class="vstat-label" data-i18n="stat_total_doses">Total IAP Doses</div>
         </div>
         <div class="vstat-card bg-mint-green">
           <div class="vstat-num text-success" id="v-stat-completed">0</div>
-          <div class="vstat-label">Completed ✅</div>
+          <div class="vstat-label" data-i18n="stat_completed_doses">Completed ✅</div>
         </div>
         <div class="vstat-card bg-soft-yellow">
           <div class="vstat-num text-warning" id="v-stat-upcoming">0</div>
-          <div class="vstat-label">Upcoming ⏰</div>
+          <div class="vstat-label" data-i18n="stat_upcoming_doses">Upcoming ⏰</div>
         </div>
         <div class="vstat-card bg-pastel-pink">
           <div class="vstat-num text-danger" id="v-stat-overdue">0</div>
-          <div class="vstat-label">Overdue ⚠️</div>
+          <div class="vstat-label" data-i18n="stat_overdue_doses">Overdue ⚠️</div>
         </div>
       </div>
 
@@ -92,9 +98,10 @@
     </div>
   </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="translations.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
