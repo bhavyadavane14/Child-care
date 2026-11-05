@@ -277,19 +277,19 @@
   <div id="admin-auth-overlay" class="admin-auth-overlay">
     <div class="admin-auth-card">
       <div class="admin-auth-icon">🩺</div>
-      <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; color: #26354A; margin-bottom: 0.4rem;">Doctor's Portal</h2>
-      <p style="color: #64748B; font-size: 0.9rem; margin-bottom: 1.5rem;">Mukta Children Hospital, Amravati<br>Authorized Pediatrician Access Only</p>
+      <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; color: #26354A; margin-bottom: 0.4rem;" data-i18n="admin_doctor_portal">Doctor's Portal</h2>
+      <p style="color: #64748B; font-size: 0.9rem; margin-bottom: 1.5rem;"><span data-i18n="hospital_name">Mukta Children Hospital, Amravati</span><br><span data-i18n="admin_authorized_only">Authorized Pediatrician Access Only</span></p>
       
-      <div id="admin-auth-error" class="admin-auth-error">Incorrect Doctor Passcode! Access Denied.</div>
+      <div id="admin-auth-error" class="admin-auth-error" data-i18n="admin_incorrect_pass">Incorrect Doctor Passcode! Access Denied.</div>
       
       <form onsubmit="handleDoctorLogin(event)">
-        <input type="password" id="admin-password" class="admin-auth-input" placeholder="Enter Doctor Password" required autofocus autocomplete="current-password">
+        <input type="password" id="admin-password" class="admin-auth-input" placeholder="Enter Doctor Password" data-i18n-placeholder="admin_password_placeholder" required autofocus autocomplete="current-password">
         <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.9rem;">
-          <span>🔓</span> Unlock Clinical Dashboard
+          <span>🔓</span> <span data-i18n="admin_unlock_btn">Unlock Clinical Dashboard</span>
         </button>
       </form>
       <div style="margin-top: 1.5rem;">
-        <a href="index.html" style="color: #0787C9; font-size: 0.85rem; font-weight: 600; text-decoration: none;">&larr; Return to Parent Health Hub</a>
+        <a href="index.html" style="color: #0787C9; font-size: 0.85rem; font-weight: 600; text-decoration: none;">&larr; <span data-i18n="admin_return_hub">Return to Parent Health Hub</span></a>
       </div>
     </div>
   </div>
@@ -302,25 +302,26 @@
       <div class="admin-brand">
         <img src="logo.jpg" alt="Mukta Hospital">
         <div>
-          <h1 class="admin-brand-title">Mukta Children Hospital – Clinical Dashboard</h1>
-          <div class="admin-brand-subtitle">Dr. Nitin Seth (MD Pediatrics) &bull; Pediatric Administrative Portal</div>
+          <h1 class="admin-brand-title" data-i18n="admin_dashboard_title">Mukta Children Hospital – Clinical Dashboard</h1>
+          <div class="admin-brand-subtitle" data-i18n="admin_dashboard_subtitle">Dr. Nitin Seth (MD Pediatrics) &bull; Pediatric Administrative Portal</div>
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 1rem;">
         <!-- Language Selector -->
-        <div class="lang-selector-group" role="group" aria-label="Language Selector">
-          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
-          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
-          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        <div class="lang-select-wrap">
+          <label class="sr-only" for="mukta-lang-dropdown" data-i18n="language">Language</label>
+          <span class="lang-globe" aria-hidden="true">🌐</span>
+          <select id="mukta-lang-dropdown" class="lang-dropdown" onchange="setLanguage(this.value)" aria-label="Language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+          </select>
         </div>
-        <span id="cloud-sync-status" style="font-size: 0.8rem; font-weight: 700; color: #10B981; background: #DFF7E8; padding: 0.35rem 0.8rem; border-radius: 20px;">
-          🟢 Cloud Database Active
-        </span>
-        <a href="index.html" class="btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+        <a href="index.html" class="btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;" data-i18n="admin_parent_hub">
           🏠 Parent Hub
         </a>
-        <button onclick="handleDoctorLogout()" class="btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem; color: #EF4444; border-color: #EF4444;">
-          🔒 Lock & Logout
+        <button onclick="handleDoctorLogout()" class="btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem; color: #EF4444; border-color: #EF4444;" data-i18n="admin_lock_logout">
+          🔒 Lock &amp; Logout
         </button>
       </div>
     </header>
@@ -333,33 +334,10 @@
           <div class="admin-metric-icon bg-baby-blue" style="color: #0787C9;">👶</div>
           <div>
             <div id="metric-total-children" class="admin-metric-val">0</div>
-            <div class="admin-metric-lbl">Registered Children</div>
+            <div class="admin-metric-lbl" data-i18n="admin_registered_children">Registered Children</div>
           </div>
         </div>
 
-        <div class="admin-metric-card">
-          <div class="admin-metric-icon bg-mint-green" style="color: #10B981;">💉</div>
-          <div>
-            <div id="metric-vaccines-taken" class="admin-metric-val">0</div>
-            <div class="admin-metric-lbl">Vaccines Administered</div>
-          </div>
-        </div>
-
-        <div class="admin-metric-card">
-          <div class="admin-metric-icon bg-soft-yellow" style="color: #D97706;">⏳</div>
-          <div>
-            <div id="metric-vaccines-pending" class="admin-metric-val">0</div>
-            <div class="admin-metric-lbl">Pending / Due Vaccines</div>
-          </div>
-        </div>
-
-        <div class="admin-metric-card">
-          <div class="admin-metric-icon bg-pastel-pink" style="color: #EF4444;">🩺</div>
-          <div>
-            <div id="metric-symptoms-logged" class="admin-metric-val">0</div>
-            <div class="admin-metric-lbl">Parent Symptom Alerts</div>
-          </div>
-        </div>
       </div>
 
       <!-- Prescribe Vaccine Tool -->
@@ -367,8 +345,8 @@
         <div class="prescribe-header">
           <span style="font-size: 1.8rem;">💉</span>
           <div>
-            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.35rem; color: #26354A; margin: 0;">Prescribe & Schedule Child Vaccine</h2>
-            <p style="font-size: 0.85rem; color: #64748B; margin: 0.2rem 0 0;">Add a doctor-recommended vaccine. It will appear on the child's immunization schedule for the parent to track and confirm.</p>
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.35rem; color: #26354A; margin: 0;" data-i18n="admin_prescribe_title">Prescribe &amp; Schedule Child Vaccine</h2>
+            <p style="font-size: 0.85rem; color: #64748B; margin: 0.2rem 0 0;" data-i18n="admin_prescribe_desc">Add a doctor-recommended vaccine. It will appear on the child's immunization schedule for the parent to track and confirm.</p>
           </div>
         </div>
 
@@ -376,14 +354,14 @@
           <div class="prescribe-form-grid">
             
             <div class="form-group">
-              <label for="prescribe-child-select">Select Patient / Child *</label>
+              <label for="prescribe-child-select" data-i18n="admin_select_patient">Select Patient / Child *</label>
               <select id="prescribe-child-select" required>
-                <option value="">-- Choose Registered Child --</option>
+                <option value="" data-i18n="admin_choose_child">-- Choose Registered Child --</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label for="prescribe-vaccine-preset">Vaccine Name *</label>
+              <label for="prescribe-vaccine-preset" data-i18n="admin_vaccine_name">Vaccine Name *</label>
               <select id="prescribe-vaccine-preset" onchange="handleVaccinePresetChange(this.value)">
                 <option value="Influenza (Flu) Annual Vaccine">Influenza (Flu) Annual Vaccine</option>
                 <option value="Typhoid Conjugate Vaccine (TCV)">Typhoid Conjugate Vaccine (TCV)</option>
@@ -393,31 +371,31 @@
                 <option value="Japanese Encephalitis (JE)">Japanese Encephalitis (JE)</option>
                 <option value="Pneumococcal Conjugate (PCV) Booster">Pneumococcal Conjugate (PCV) Booster</option>
                 <option value="MMR Booster (Measles, Mumps, Rubella)">MMR Booster (Measles, Mumps, Rubella)</option>
-                <option value="CUSTOM">-- Enter Custom Vaccine Name --</option>
+                <option value="CUSTOM" data-i18n="admin_custom_vaccine">-- Enter Custom Vaccine Name --</option>
               </select>
-              <input type="text" id="prescribe-custom-name" placeholder="Type custom vaccine name" style="display: none; margin-top: 0.5rem;">
+              <input type="text" id="prescribe-custom-name" placeholder="Type custom vaccine name" data-i18n-placeholder="admin_custom_vaccine_ph" style="display: none; margin-top: 0.5rem;">
             </div>
 
             <div class="form-group">
-              <label for="prescribe-due-date">Recommended Due Date *</label>
+              <label for="prescribe-due-date" data-i18n="admin_due_date">Recommended Due Date *</label>
               <input type="date" id="prescribe-due-date" required>
             </div>
 
             <div class="form-group">
-              <label for="prescribe-dosage">Dosage & Route</label>
-              <input type="text" id="prescribe-dosage" placeholder="e.g. 0.5 ml IM, Anterolateral Thigh" value="0.5 ml IM">
+              <label for="prescribe-dosage" data-i18n="admin_dosage">Dosage &amp; Route</label>
+              <input type="text" id="prescribe-dosage" placeholder="e.g. 0.5 ml IM, Anterolateral Thigh" data-i18n-placeholder="admin_dosage_ph" value="0.5 ml IM">
             </div>
 
             <div class="form-group" style="grid-column: 1 / -1;">
-              <label for="prescribe-notes">Doctor's Clinical Instructions for Parent</label>
-              <textarea id="prescribe-notes" rows="2" placeholder="e.g. Advised during next OPD visit. Paracetamol drops recommended in case of mild post-vaccine fever."></textarea>
+              <label for="prescribe-notes" data-i18n="admin_instructions">Doctor's Clinical Instructions for Parent</label>
+              <textarea id="prescribe-notes" rows="2" placeholder="e.g. Advised during next OPD visit. Paracetamol drops recommended in case of mild post-vaccine fever." data-i18n-placeholder="admin_instructions_ph"></textarea>
             </div>
 
           </div>
 
           <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
             <button type="submit" class="btn-primary" style="padding: 0.85rem 1.75rem;">
-              <span>💉</span> Prescribe Vaccine to Patient
+              <span data-i18n="admin_prescribe_btn">💉 Prescribe Vaccine to Patient</span>
             </button>
           </div>
         </form>
@@ -427,11 +405,11 @@
       <div class="admin-section-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: gap;">
           <div>
-            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.35rem; color: #26354A; margin: 0;">Patient Directory & Health Monitoring</h2>
-            <p style="font-size: 0.85rem; color: #64748B; margin: 0.2rem 0 0;">Review child health records, track who received vaccines, and monitor parent symptom logs.</p>
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.35rem; color: #26354A; margin: 0;" data-i18n="admin_directory_title">Patient Directory &amp; Health Monitoring</h2>
+            <p style="font-size: 0.85rem; color: #64748B; margin: 0.2rem 0 0;" data-i18n="admin_directory_desc">Review child health records, track who received vaccines, and monitor parent symptom logs.</p>
           </div>
           <div style="display: flex; gap: 0.75rem;">
-            <input type="text" id="child-search-input" placeholder="🔍 Search child name or UHID..." onkeyup="filterChildrenTable()" style="padding: 0.6rem 1rem; border: 1.5px solid #E2E8F0; border-radius: 12px; font-size: 0.85rem;">
+            <input type="text" id="child-search-input" placeholder="🔍 Search child name or UHID..." data-i18n-placeholder="admin_search_ph" onkeyup="filterChildrenTable()" style="padding: 0.6rem 1rem; border: 1.5px solid #E2E8F0; border-radius: 12px; font-size: 0.85rem;">
           </div>
         </div>
 
@@ -439,13 +417,13 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Patient Name</th>
-                <th>UHID</th>
-                <th>Age / DOB</th>
-                <th>Gender & Blood</th>
-                <th>Vaccination Status</th>
-                <th>Recent Alerts</th>
-                <th>Action</th>
+                <th data-i18n="admin_col_patient">Patient Name</th>
+                <th data-i18n="admin_col_uhid">UHID</th>
+                <th data-i18n="admin_col_age_dob">Age / DOB</th>
+                <th data-i18n="admin_col_gender_blood">Gender &amp; Blood</th>
+                <th data-i18n="admin_col_vacc_status">Vaccination Status</th>
+                <th data-i18n="admin_col_recent_alerts">Recent Alerts</th>
+                <th data-i18n="admin_col_action">Action</th>
               </tr>
             </thead>
             <tbody id="admin-children-tbody">
@@ -466,24 +444,24 @@
           <div id="modal-child-avatar" style="font-size: 2.5rem; width: 64px; height: 64px; background: #E5F4FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">👶</div>
           <div>
             <h2 id="modal-child-name" style="font-family: 'Outfit', sans-serif; font-size: 1.5rem; color: #26354A; margin: 0;">Child Name</h2>
-            <div style="font-size: 0.85rem; color: #64748B;">UHID: <span id="modal-child-uhid" style="font-weight: 700; color: #0787C9;">MUKTA-XXXX</span> &bull; Age: <span id="modal-child-age">--</span> &bull; Blood: <span id="modal-child-blood">--</span></div>
+            <div style="font-size: 0.85rem; color: #64748B;"><span data-i18n="admin_col_uhid">UHID</span>: <span id="modal-child-uhid" style="font-weight: 700; color: #0787C9;">MUKTA-XXXX</span> &bull; <span data-i18n="col_age">Age</span>: <span id="modal-child-age">--</span> &bull; <span data-i18n="blood_group_label">Blood Group</span>: <span id="modal-child-blood">--</span></div>
           </div>
         </div>
         <button onclick="closeInspectionModal()" style="background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #94A3B8;">&times;</button>
       </div>
 
       <!-- Tab Headers -->
-      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #EDF2F7; padding-bottom: 0.5rem;">
-        <button class="filter-chip active" onclick="switchInspectionTab('vaccines')">💉 Vaccinations</button>
-        <button class="filter-chip" onclick="switchInspectionTab('growth')">📈 Growth & BMI</button>
-        <button class="filter-chip" onclick="switchInspectionTab('symptoms')">🩺 Symptom Reports</button>
-        <button class="filter-chip" onclick="switchInspectionTab('milestones')">🌱 Milestones</button>
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #EDF2F7; padding-bottom: 0.5rem; flex-wrap: wrap;">
+        <button class="filter-chip active" data-tab="vaccines" onclick="switchInspectionTab('vaccines')" data-i18n="admin_tab_vaccines">💉 Vaccinations</button>
+        <button class="filter-chip" data-tab="growth" onclick="switchInspectionTab('growth')" data-i18n="admin_tab_growth">📈 Growth &amp; BMI</button>
+        <button class="filter-chip" data-tab="symptoms" onclick="switchInspectionTab('symptoms')" data-i18n="admin_tab_symptoms">🩺 Symptom Reports</button>
+        <button class="filter-chip" data-tab="milestones" onclick="switchInspectionTab('milestones')" data-i18n="admin_tab_milestones">🌱 Milestones</button>
       </div>
 
       <!-- Tab 1: Vaccinations -->
       <div id="tab-vaccines" class="inspection-tab-panel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="font-size: 1.1rem; color: #26354A; margin: 0;">Vaccine Record History</h3>
+          <h3 style="font-size: 1.1rem; color: #26354A; margin: 0;" data-i18n="admin_vaccine_history">Vaccine Record History</h3>
         </div>
         <div id="modal-vaccines-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
           <!-- Dynamically filled -->
@@ -492,7 +470,7 @@
 
       <!-- Tab 2: Growth -->
       <div id="tab-growth" class="inspection-tab-panel" style="display: none;">
-        <h3 style="font-size: 1.1rem; color: #26354A; margin-bottom: 1rem;">Growth & Physical Progress</h3>
+        <h3 style="font-size: 1.1rem; color: #26354A; margin-bottom: 1rem;" data-i18n="admin_growth_progress">Growth &amp; Physical Progress</h3>
         <div id="modal-growth-list">
           <!-- Dynamically filled -->
         </div>
@@ -500,7 +478,7 @@
 
       <!-- Tab 3: Symptoms -->
       <div id="tab-symptoms" class="inspection-tab-panel" style="display: none;">
-        <h3 style="font-size: 1.1rem; color: #26354A; margin-bottom: 1rem;">Recent Symptom Logs by Parents</h3>
+        <h3 style="font-size: 1.1rem; color: #26354A; margin-bottom: 1rem;" data-i18n="admin_symptom_logs">Recent Symptom Logs by Parents</h3>
         <div id="modal-symptoms-list">
           <!-- Dynamically filled -->
         </div>
@@ -508,14 +486,14 @@
 
       <!-- Tab 4: Milestones -->
       <div id="tab-milestones" class="inspection-tab-panel" style="display: none;">
-        <h3 style="font-size: 1.1rem; color: #26354A; margin-bottom: 1rem;">Developmental Milestones</h3>
+        <h3 style="font-size: 1.1rem; color: #26354A; margin-bottom: 1rem;" data-i18n="admin_dev_milestones">Developmental Milestones</h3>
         <div id="modal-milestones-list">
           <!-- Dynamically filled -->
         </div>
       </div>
 
       <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
-        <button onclick="closeInspectionModal()" class="btn-secondary">Close Dossier</button>
+        <button onclick="closeInspectionModal()" class="btn-secondary" data-i18n="admin_close_dossier">Close Dossier</button>
       </div>
     </div>
   </div>
@@ -560,7 +538,7 @@
         sessionStorage.setItem('mukta_doctor_authenticated', 'true');
         errEl.style.display = 'none';
         checkDoctorAuth();
-        showToast('Welcome, Dr. Nitin Seth! Clinical Dashboard Unlocked.', 'success');
+        showToast(tr('admin_welcome', 'Welcome, Dr. Nitin Seth! Clinical Dashboard Unlocked.'), 'success');
       } else {
         errEl.style.display = 'block';
         document.getElementById('admin-password').value = '';
@@ -571,7 +549,7 @@
     function handleDoctorLogout() {
       sessionStorage.removeItem('mukta_doctor_authenticated');
       checkDoctorAuth();
-      showToast('Doctor session locked.', 'info');
+      showToast(tr('admin_locked', 'Doctor session locked.'), 'info');
     }
 
     function handleVaccinePresetChange(val) {
@@ -600,17 +578,17 @@
 
     function populatePrescribeChildDropdown() {
       const select = document.getElementById('prescribe-child-select');
-      select.innerHTML = '<option value="">-- Choose Registered Child --</option>';
+      select.innerHTML = `<option value="">${tr('admin_choose_child', '-- Choose Registered Child --')}</option>`;
 
       if (appState.children.length === 0) {
-        select.innerHTML = '<option value="">No children registered yet</option>';
+        select.innerHTML = `<option value="">${tr('admin_no_children_yet', 'No children registered yet')}</option>`;
         return;
       }
 
       appState.children.forEach(c => {
         const opt = document.createElement('option');
         opt.value = c.id;
-        opt.textContent = `${c.full_name} (${c.uhid || 'UHID Pending'}) - ${formatDate(c.dob)}`;
+        opt.textContent = `${c.full_name} (${c.uhid || tr('admin_uhid_pending', 'UHID Pending')}) - ${formatDate(c.dob)}`;
         select.appendChild(opt);
       });
     }
@@ -619,7 +597,7 @@
       e.preventDefault();
       const childId = document.getElementById('prescribe-child-select').value;
       if (!childId) {
-        showToast('Please select a registered child patient.', 'warning');
+        showToast(tr('admin_select_child_warn', 'Please select a registered child patient.'), 'warning');
         return;
       }
 
@@ -627,7 +605,7 @@
       const customName = document.getElementById('prescribe-custom-name').value.trim();
       const vaccineName = preset === 'CUSTOM' ? customName : preset;
       if (!vaccineName) {
-        showToast('Please specify the vaccine name.', 'warning');
+        showToast(tr('admin_specify_vaccine', 'Please specify the vaccine name.'), 'warning');
         return;
       }
 
@@ -652,7 +630,7 @@
       };
 
       await dbClient.post('/api/vaccinations', prescribedRecord);
-      showToast(`Prescribed "${vaccineName}" successfully! Parent can now view & mark it taken.`, 'success');
+      showToast(trf('admin_prescribed_ok', { name: vaccineName }, `Prescribed "${vaccineName}" successfully! Parent can now view & mark it taken.`), 'success');
 
       document.getElementById('prescribe-notes').value = '';
       await renderAdminChildrenTable();
@@ -668,8 +646,8 @@
           <tr>
             <td colspan="7" style="text-align: center; padding: 2.5rem; color: #64748B;">
               <div style="font-size: 2rem; margin-bottom: 0.5rem;">👶</div>
-              <strong>No children profiles registered in the system yet.</strong><br>
-              When parents register their child on the Health Hub, they will appear here automatically.
+              <strong>${tr('admin_empty_title', 'No children profiles registered in the system yet.')}</strong><br>
+              ${tr('admin_empty_desc', 'When parents register their child on the Health Hub, they will appear here automatically.')}
             </td>
           </tr>
         `;
@@ -685,11 +663,16 @@
         const recentSymptoms = symptoms.length;
 
         const age = calculateAge(child.dob);
-        const tr = document.createElement('tr');
-        tr.dataset.name = child.full_name.toLowerCase();
-        tr.dataset.uhid = (child.uhid || '').toLowerCase();
+        const rowEl = document.createElement('tr');
+        rowEl.dataset.name = child.full_name.toLowerCase();
+        rowEl.dataset.uhid = (child.uhid || '').toLowerCase();
 
-        tr.innerHTML = `
+        const takenLabel = takenCount > 0
+          ? trf('admin_status_taken', { count: takenCount }, `✅ ${takenCount} Taken`)
+          : tr('admin_status_zero_taken', '⏳ 0 Taken');
+        const scheduledLabel = trf('admin_scheduled_count', { count: totalVax }, `(${totalVax} scheduled)`);
+
+        rowEl.innerHTML = `
           <td>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
               <span style="font-size: 1.5rem;">${child.gender === 'male' ? '👦' : '👧'}</span>
@@ -699,47 +682,31 @@
             </div>
           </td>
           <td><span style="font-family: monospace; font-weight: 700; color: #0787C9;">${child.uhid || 'MUKTA-PENDING'}</span></td>
-          <td>${age.label}<br><small style="color: #64748B;">DOB: ${formatDate(child.dob)}</small></td>
-          <td>${child.gender === 'male' ? 'Boy' : 'Girl'} &bull; <strong style="color: #EF4444;">${child.blood_group || 'Not recorded'}</strong></td>
+          <td>${age.label}<br><small style="color: #64748B;">${tr('dob_label', 'DOB')}: ${formatDate(child.dob)}</small></td>
+          <td>${child.gender === 'male' ? tr('admin_boy', 'Boy') : tr('admin_girl', 'Girl')} &bull; <strong style="color: #EF4444;">${child.blood_group || tr('admin_not_recorded', 'Not recorded')}</strong></td>
           <td>
             <span class="${takenCount > 0 ? 'status-pill-taken' : 'status-pill-pending'}">
-              ${takenCount > 0 ? `✅ ${takenCount} Taken` : `⏳ 0 Taken`} (${totalVax} scheduled)
+              ${takenLabel} ${scheduledLabel}
             </span>
           </td>
           <td>
             ${recentSymptoms > 0 
-              ? `<span style="background: #FFE9EF; color: #EF4444; padding: 0.3rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">🚨 ${recentSymptoms} Episode(s)</span>` 
-              : `<span style="color: #10B981; font-size: 0.85rem; font-weight: 600;">🌿 All Good</span>`}
+              ? `<span style="background: #FFE9EF; color: #EF4444; padding: 0.3rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">${trf('admin_episodes', { count: recentSymptoms }, `🚨 ${recentSymptoms} Episode(s)`)}</span>` 
+              : `<span style="color: #10B981; font-size: 0.85rem; font-weight: 600;">${tr('admin_all_good', '🌿 All Good')}</span>`}
           </td>
           <td>
             <button onclick="openInspectionModal('${child.id}')" class="btn-primary" style="padding: 0.45rem 0.9rem; font-size: 0.8rem;">
-              <span>🔍</span> Inspect Dossier
+              ${tr('admin_inspect_btn', '🔍 Inspect Dossier')}
             </button>
           </td>
         `;
-        tbody.appendChild(tr);
+        tbody.appendChild(rowEl);
       }
     }
 
     async function updateAdminMetrics() {
-      document.getElementById('metric-total-children').textContent = appState.children.length;
-
-      let totalTaken = 0;
-      let totalPending = 0;
-      let totalSymptoms = 0;
-
-      for (const child of appState.children) {
-        const vax = await dbClient.get('/api/vaccinations', { childId: child.id });
-        const sym = await dbClient.get('/api/symptoms', { childId: child.id });
-
-        totalTaken += vax.filter(v => v.status === 'Completed').length;
-        totalPending += vax.filter(v => v.status !== 'Completed').length;
-        totalSymptoms += sym.length;
-      }
-
-      document.getElementById('metric-vaccines-taken').textContent = totalTaken;
-      document.getElementById('metric-vaccines-pending').textContent = totalPending;
-      document.getElementById('metric-symptoms-logged').textContent = totalSymptoms;
+      const totalEl = document.getElementById('metric-total-children');
+      if (totalEl) totalEl.textContent = appState.children.length;
     }
 
     function filterChildrenTable() {
@@ -762,7 +729,7 @@
       document.getElementById('modal-child-avatar').textContent = child.gender === 'male' ? '👦' : '👧';
       const age = calculateAge(child.dob);
       document.getElementById('modal-child-age').textContent = age.label;
-      document.getElementById('modal-child-blood').textContent = child.blood_group || 'O+ (Default)';
+      document.getElementById('modal-child-blood').textContent = child.blood_group || tr('unknown', 'Unknown');
 
       switchInspectionTab('vaccines');
       document.getElementById('inspection-modal').style.display = 'flex';
@@ -783,7 +750,7 @@
       // Highlight active chip
       const btns = document.querySelectorAll('.inspection-content .filter-chip');
       btns.forEach(b => {
-        if (b.textContent.toLowerCase().includes(tabName)) b.classList.add('active');
+        if (b.dataset.tab === tabName) b.classList.add('active');
       });
 
       if (!activeInspectionChild) return;
@@ -792,7 +759,7 @@
         const vaxList = document.getElementById('modal-vaccines-list');
         const records = await dbClient.get('/api/vaccinations', { childId: activeInspectionChild.id });
         if (records.length === 0) {
-          vaxList.innerHTML = '<div style="color: #64748B; padding: 1.5rem; text-align: center;">No vaccines recorded for this child yet. Use the prescription form above to schedule vaccines.</div>';
+          vaxList.innerHTML = `<div style="color: #64748B; padding: 1.5rem; text-align: center;">${tr('admin_no_vaccines', 'No vaccines recorded for this child yet. Use the prescription form above to schedule vaccines.')}</div>`;
           return;
         }
 
@@ -801,20 +768,20 @@
             <div>
               <div style="font-weight: 700; color: #26354A; font-size: 0.95rem;">
                 ${v.vaccine_name} 
-                ${v.is_prescribed_by_doctor ? '<span style="background: #E5F4FF; color: #0787C9; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 8px; margin-left: 0.5rem;">Doctor Prescribed</span>' : ''}
+                ${v.is_prescribed_by_doctor ? `<span style="background: #E5F4FF; color: #0787C9; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 8px; margin-left: 0.5rem;">${tr('admin_doctor_prescribed', 'Doctor Prescribed')}</span>` : ''}
               </div>
               <div style="font-size: 0.8rem; color: #64748B; margin-top: 0.2rem;">
-                Dose: ${v.dose_number} &bull; Due: ${formatDate(v.recommended_date)}
-                ${v.notes ? `&bull; <em>Note: ${v.notes}</em>` : ''}
+                ${tr('admin_dose_label', 'Dose:')} ${v.dose_number} &bull; ${tr('admin_due_label', 'Due:')} ${formatDate(v.recommended_date)}
+                ${v.notes ? `&bull; <em>${tr('admin_note_label', 'Note:')} ${v.notes}</em>` : ''}
               </div>
             </div>
             <div style="display: flex; align-items: center; gap: 0.75rem;">
               <span class="${v.status === 'Completed' ? 'status-pill-taken' : 'status-pill-pending'}">
-                ${v.status === 'Completed' ? `✅ Taken on ${formatDate(v.actual_date)}` : `⏳ Due / Not Taken`}
+                ${v.status === 'Completed' ? trf('admin_taken_on', { date: formatDate(v.actual_date) }, `✅ Taken on ${formatDate(v.actual_date)}`) : tr('admin_due_not_taken', '⏳ Due / Not Taken')}
               </span>
               ${v.status !== 'Completed' ? `
                 <button onclick="adminToggleVaccineTaken('${v.id}', '${v.vaccine_id}')" class="btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
-                  🏥 Mark Given in OPD
+                  ${tr('admin_mark_given', '🏥 Mark Given in OPD')}
                 </button>
               ` : ''}
             </div>
@@ -826,22 +793,22 @@
         const growthList = document.getElementById('modal-growth-list');
         const records = await dbClient.get('/api/growth', { childId: activeInspectionChild.id });
         if (records.length === 0) {
-          growthList.innerHTML = '<div style="color: #64748B; padding: 1.5rem; text-align: center;">No growth measurements logged yet.</div>';
+          growthList.innerHTML = `<div style="color: #64748B; padding: 1.5rem; text-align: center;">${tr('admin_no_growth', 'No growth measurements logged yet.')}</div>`;
           return;
         }
         growthList.innerHTML = `
           <table class="admin-table">
             <thead>
-              <tr><th>Date</th><th>Height</th><th>Weight</th><th>BMI</th><th>Category</th></tr>
+              <tr><th>${tr('admin_col_date', 'Date')}</th><th>${tr('admin_col_height', 'Height')}</th><th>${tr('admin_col_weight', 'Weight')}</th><th>${tr('admin_col_bmi', 'BMI')}</th><th>${tr('admin_col_category', 'Category')}</th></tr>
             </thead>
             <tbody>
               ${records.map(r => `
                 <tr>
                   <td>${formatDate(r.measurement_date)}</td>
-                  <td>${r.height_cm} cm</td>
-                  <td>${r.weight_kg} kg</td>
+                  <td>${r.height_cm} ${tr('chart_cm', 'cm')}</td>
+                  <td>${r.weight_kg} ${tr('chart_kg', 'kg')}</td>
                   <td><strong>${r.bmi}</strong></td>
-                  <td><span style="color: #10B981; font-weight: 700;">${r.bmi_category || 'Normal'}</span></td>
+                  <td><span style="color: #10B981; font-weight: 700;">${translateBmiCategory(r.bmi_category)}</span></td>
                 </tr>
               `).join('')}
             </tbody>
@@ -853,19 +820,19 @@
         const symList = document.getElementById('modal-symptoms-list');
         const records = await dbClient.get('/api/symptoms', { childId: activeInspectionChild.id });
         if (records.length === 0) {
-          symList.innerHTML = '<div style="color: #10B981; padding: 1.5rem; text-align: center;">🌿 No abnormal symptoms logged by parent. Child is reported healthy!</div>';
+          symList.innerHTML = `<div style="color: #10B981; padding: 1.5rem; text-align: center;">${tr('admin_no_symptoms', '🌿 No abnormal symptoms logged by parent. Child is reported healthy!')}</div>`;
           return;
         }
         symList.innerHTML = records.map(s => `
           <div style="background: #FFE9EF; border-radius: 14px; padding: 1rem; margin-bottom: 0.75rem; border-left: 4px solid #EF4444;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <strong style="color: #26354A;">${s.symptom_name}</strong>
-              <small style="color: #64748B;">Reported: ${formatDate(s.onset_date)}</small>
+              <small style="color: #64748B;">${tr('admin_report_date', 'Reported:')} ${formatDate(s.onset_date)}</small>
             </div>
             <div style="font-size: 0.85rem; color: #475569; margin-top: 0.3rem;">
-              Severity: <strong>${s.severity || 'Moderate'}</strong> &bull; Duration: ${s.duration || '1-3 days'}
+              ${tr('admin_severity', 'Severity:')} <strong>${translateStoredSeverity(s.severity)}</strong> &bull; ${tr('admin_duration', 'Duration:')} ${translateStoredDuration(s.duration)}
             </div>
-            ${s.observations ? `<div style="font-size: 0.85rem; color: #26354A; margin-top: 0.4rem; background: #ffffff; padding: 0.5rem; border-radius: 8px;">Parent Notes: ${s.observations}</div>` : ''}
+            ${s.observations ? `<div style="font-size: 0.85rem; color: #26354A; margin-top: 0.4rem; background: #ffffff; padding: 0.5rem; border-radius: 8px;">${tr('admin_parent_notes', 'Parent Notes:')} ${s.observations}</div>` : ''}
           </div>
         `).join('');
       }
@@ -874,13 +841,13 @@
         const mList = document.getElementById('modal-milestones-list');
         const records = await dbClient.get('/api/milestones', { childId: activeInspectionChild.id });
         if (records.length === 0) {
-          mList.innerHTML = '<div style="color: #64748B; padding: 1.5rem; text-align: center;">No developmental milestones marked yet.</div>';
+          mList.innerHTML = `<div style="color: #64748B; padding: 1.5rem; text-align: center;">${tr('admin_no_milestones', 'No developmental milestones marked yet.')}</div>`;
           return;
         }
         mList.innerHTML = records.map(m => `
           <div style="background: #F8FAFC; padding: 0.75rem 1rem; border-radius: 12px; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
-            <span>${m.milestone_text} (${m.domain})</span>
-            <strong style="color: #10B981;">✅ Achieved</strong>
+            <span>${m.milestone_text} (${translateMilestoneDomain(m.domain)})</span>
+            <strong style="color: #10B981;">${tr('admin_achieved', '✅ Achieved')}</strong>
           </div>
         `).join('');
       }
@@ -901,14 +868,27 @@
       };
 
       await dbClient.post('/api/vaccinations', updated);
-      showToast('Vaccine officially marked as Administered in Clinic OPD!', 'success');
+      showToast(tr('admin_administered_ok', 'Vaccine officially marked as Administered in Clinic OPD!'), 'success');
       switchInspectionTab('vaccines');
       await renderAdminChildrenTable();
       await updateAdminMetrics();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      const dropdown = document.getElementById('mukta-lang-dropdown');
+      if (dropdown && typeof window.currentLang !== 'undefined') dropdown.value = window.currentLang;
       checkDoctorAuth();
+    });
+
+    // Re-render admin dynamic content when the language changes
+    window.addEventListener('languageChanged', () => {
+      if (sessionStorage.getItem('mukta_doctor_authenticated') !== 'true') return;
+      populatePrescribeChildDropdown();
+      if (typeof renderAdminChildrenTable === 'function') renderAdminChildrenTable();
+      if (activeInspectionChild) {
+        const activeTab = document.querySelector('.inspection-content .filter-chip.active');
+        switchInspectionTab(activeTab?.dataset.tab || 'vaccines');
+      }
     });
   </script>
 </body>

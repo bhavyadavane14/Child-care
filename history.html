@@ -26,13 +26,17 @@
       </a>
       <div style="display: flex; align-items: center; gap: 12px;">
         <!-- Language Selector -->
-        <div class="lang-selector-group" role="group" aria-label="Language Selector">
-          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
-          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
-          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        <div class="lang-select-wrap">
+          <label class="sr-only" for="mukta-lang-dropdown" data-i18n="language">Language</label>
+          <span class="lang-globe" aria-hidden="true">🌐</span>
+          <select id="mukta-lang-dropdown" class="lang-dropdown" onchange="setLanguage(this.value)" aria-label="Language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+          </select>
         </div>
         <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
-        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+        <strong id="nav-child-name" style="color: var(--text-dark);" data-i18n="active_child">Active Child</strong>
       </div>
     </div>
   </div>
@@ -53,38 +57,38 @@
         <div class="toolbar-top-row">
           <!-- Time Presets Filter -->
           <div class="preset-filters-wrap">
-            <span class="toolbar-label">Time Range:</span>
-            <button class="filter-pill-small active" data-range="all" onclick="setMasterHistoryFilter('all', this)">All Records</button>
-            <button class="filter-pill-small" data-range="yesterday" onclick="setMasterHistoryFilter('yesterday', this)">Yesterday</button>
-            <button class="filter-pill-small" data-range="last_7_days" onclick="setMasterHistoryFilter('last_7_days', this)">Last 7 Days</button>
-            <button class="filter-pill-small" data-range="last_30_days" onclick="setMasterHistoryFilter('last_30_days', this)">Last 30 Days</button>
-            <button class="filter-pill-small" data-range="last_3_months" onclick="setMasterHistoryFilter('last_3_months', this)">Last 3 Months</button>
-            <button class="filter-pill-small" data-range="last_6_months" onclick="setMasterHistoryFilter('last_6_months', this)">Last 6 Months</button>
-            <button class="filter-pill-small" data-range="last_year" onclick="setMasterHistoryFilter('last_year', this)">Last 1 Year</button>
+            <span class="toolbar-label" data-i18n="time_range">Time Range:</span>
+            <button class="filter-pill-small active" data-range="all" onclick="setMasterHistoryFilter('all', this)" data-i18n="all_records">All Records</button>
+            <button class="filter-pill-small" data-range="yesterday" onclick="setMasterHistoryFilter('yesterday', this)" data-i18n="yesterday">Yesterday</button>
+            <button class="filter-pill-small" data-range="last_7_days" onclick="setMasterHistoryFilter('last_7_days', this)" data-i18n="last_7_days">Last 7 Days</button>
+            <button class="filter-pill-small" data-range="last_30_days" onclick="setMasterHistoryFilter('last_30_days', this)" data-i18n="last_30_days">Last 30 Days</button>
+            <button class="filter-pill-small" data-range="last_3_months" onclick="setMasterHistoryFilter('last_3_months', this)" data-i18n="last_3_months">Last 3 Months</button>
+            <button class="filter-pill-small" data-range="last_6_months" onclick="setMasterHistoryFilter('last_6_months', this)" data-i18n="last_6_months">Last 6 Months</button>
+            <button class="filter-pill-small" data-range="last_year" onclick="setMasterHistoryFilter('last_year', this)" data-i18n="last_1_year">Last 1 Year</button>
           </div>
 
           <!-- Export Actions -->
           <div class="toolbar-actions">
-            <button class="btn-pill-outline btn-sm" onclick="exportFullHistory()">📥 Export Full History (CSV)</button>
+            <button class="btn-pill-outline btn-sm" onclick="exportFullHistory()" data-i18n="export_full_history">📥 Export Full History (CSV)</button>
           </div>
         </div>
 
         <!-- Category Filters & Search -->
         <div class="toolbar-bottom-row">
           <div class="category-filters-wrap">
-            <span class="toolbar-label">Category:</span>
-            <button class="cat-filter-btn active" data-hcat="all" onclick="setMasterHistoryCategory('all', this)">All Categories</button>
-            <button class="cat-filter-btn" data-hcat="growth" onclick="setMasterHistoryCategory('growth', this)">📈 Growth</button>
-            <button class="cat-filter-btn" data-hcat="vaccination" onclick="setMasterHistoryCategory('vaccination', this)">💉 Vaccines</button>
-            <button class="cat-filter-btn" data-hcat="symptom" onclick="setMasterHistoryCategory('symptom', this)">🩺 Symptoms</button>
-            <button class="cat-filter-btn" data-hcat="milestone" onclick="setMasterHistoryCategory('milestone', this)">🌱 Milestones</button>
-            <button class="cat-filter-btn" data-hcat="nutrition" onclick="setMasterHistoryCategory('nutrition', this)">🥗 Nutrition</button>
-            <button class="cat-filter-btn" data-hcat="document" onclick="setMasterHistoryCategory('document', this)">🪪 Documents</button>
-            <button class="cat-filter-btn" data-hcat="appointment" onclick="setMasterHistoryCategory('appointment', this)">📅 Appointments</button>
+            <span class="toolbar-label" data-i18n="category_label">Category:</span>
+            <button class="cat-filter-btn active" data-hcat="all" onclick="setMasterHistoryCategory('all', this)" data-i18n="all_categories">All Categories</button>
+            <button class="cat-filter-btn" data-hcat="growth" onclick="setMasterHistoryCategory('growth', this)">📈 <span data-i18n="growth">Growth</span></button>
+            <button class="cat-filter-btn" data-hcat="vaccination" onclick="setMasterHistoryCategory('vaccination', this)">💉 <span data-i18n="vaccination">Vaccines</span></button>
+            <button class="cat-filter-btn" data-hcat="symptom" onclick="setMasterHistoryCategory('symptom', this)">🩺 <span data-i18n="symptom">Symptoms</span></button>
+            <button class="cat-filter-btn" data-hcat="milestone" onclick="setMasterHistoryCategory('milestone', this)">🌱 <span data-i18n="milestone">Milestones</span></button>
+            <button class="cat-filter-btn" data-hcat="nutrition" onclick="setMasterHistoryCategory('nutrition', this)">🥗 <span data-i18n="nutrition">Nutrition</span></button>
+            <button class="cat-filter-btn" data-hcat="document" onclick="setMasterHistoryCategory('document', this)">🪪 <span data-i18n="document">Documents</span></button>
+            <button class="cat-filter-btn" data-hcat="appointment" onclick="setMasterHistoryCategory('appointment', this)">📅 <span data-i18n="appointment">Appointments</span></button>
           </div>
 
           <div class="history-search-wrap">
-            <input type="text" id="history-search-input" class="clean-input input-sm" placeholder="🔍 Search records..." oninput="handleHistorySearch(this.value)" />
+            <input type="text" id="history-search-input" class="clean-input input-sm" placeholder="🔍 Search records..." data-i18n-placeholder="search_records" oninput="handleHistorySearch(this.value)" />
           </div>
         </div>
       </div>
@@ -92,15 +96,15 @@
       <!-- Master Activity Timeline Container -->
       <div class="master-timeline-wrapper" id="master-timeline-container">
         <!-- Rendered by app.js -->
-        <div class="empty-state">Loading complete health history...</div>
+        <div class="empty-state" data-i18n="loading_history">Loading complete health history...</div>
       </div>
     </div>
   </main>
 
   <footer class="clean-footer">
     <div class="container footer-bottom-container">
-      <div>© 2026 Mukta Children Hospital, Amravati.</div>
-      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+      <div data-i18n="footer_copy_short">© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;" data-i18n="back_to_home_link">Back to Home</a>
     </div>
   </footer>
 

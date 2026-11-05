@@ -24,9 +24,18 @@
       <a href="index.html" class="btn-back-hub">
         &larr; Back to Health Hub
       </a>
-      <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <div class="lang-select-wrap">
+          <label class="sr-only" for="mukta-lang-dropdown" data-i18n="language">Language</label>
+          <span class="lang-globe" aria-hidden="true">🌐</span>
+          <select id="mukta-lang-dropdown" class="lang-dropdown" onchange="setLanguage(this.value)" aria-label="Language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+          </select>
+        </div>
         <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
-        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+        <strong id="nav-child-name" style="color: var(--text-dark);" data-i18n="active_child">Active Child</strong>
       </div>
     </div>
   </div>
@@ -34,9 +43,9 @@
   <!-- Subpage Header Banner -->
   <div class="subpage-hero-banner" style="background: linear-gradient(135deg, #FFE9EF 0%, #FFF5D8 100%);">
     <div class="container">
-      <div class="section-tag tag-pink">🩺 Pediatric Symptom Guidance</div>
-      <h1 class="subpage-hero-title">Symptom Checker &amp; Predictor</h1>
-      <p class="subpage-hero-sub">Select your child's symptoms to predict possible conditions (like Diarrhea / Gastroenteritis or Common Cold) and receive doctor-reviewed comfort protocols.</p>
+      <div class="section-tag tag-pink" data-i18n="symptom_page_tag">🩺 Pediatric Symptom Guidance</div>
+      <h1 class="subpage-hero-title" data-i18n="symptom_page_title">Symptom Checker &amp; Predictor</h1>
+      <p class="subpage-hero-sub" data-i18n="symptom_page_desc">Select your child's symptoms to predict possible conditions (like Diarrhea / Gastroenteritis or Common Cold) and receive doctor-reviewed comfort protocols.</p>
     </div>
   </div>
 
@@ -47,15 +56,17 @@
       <div class="safety-warning-box">
         <span class="warning-icon">⚠️</span>
         <div>
-          <strong>Educational Guidance Only:</strong> This tool suggests possible conditions to assist parents and does not replace in-person diagnosis. For severe symptoms, contact Mukta Children Hospital emergency immediately at <strong>+91 98230 45678</strong>.
+          <strong data-i18n="symptom_safety_title">Educational Guidance Only:</strong>
+          <span data-i18n="symptom_safety_body">This tool suggests possible conditions to assist parents and does not replace in-person diagnosis. For severe symptoms, contact Mukta Children Hospital emergency immediately at</span>
+          <strong>+91 98230 45678</strong>.
         </div>
       </div>
 
       <div class="symptom-checker-grid">
         <!-- Left: Symptom Selector Chips -->
         <div class="symptom-selection-card">
-          <h2 class="card-inner-title">1. Select Observed Symptoms</h2>
-          <p class="card-inner-desc">Click one or more symptoms your child is currently experiencing:</p>
+          <h2 class="card-inner-title" data-i18n="symptom_step1">1. Select Observed Symptoms</h2>
+          <p class="card-inner-desc" data-i18n="symptom_step1_desc">Click one or more symptoms your child is currently experiencing:</p>
 
           <div class="symptom-chips-wrap" id="symptom-chips-container">
             <!-- Rendered with real emojis -->
@@ -63,33 +74,33 @@
 
           <!-- Follow-up Questions Card -->
           <div class="symptom-followups" id="symptom-followup-card" style="display: none;">
-            <h3 class="followup-title">2. Tell Us More:</h3>
+            <h3 class="followup-title" data-i18n="symptom_step2">2. Tell Us More:</h3>
 
             <div class="form-row">
-              <label class="clean-label" for="symp-duration">Duration of Symptoms:</label>
+              <label class="clean-label" for="symp-duration" data-i18n="duration_label">Duration of Symptoms:</label>
               <select id="symp-duration" class="clean-select" onchange="runSymptomPrediction()">
-                <option value="Just started today (< 24 hrs)">Just started today (&lt; 24 hrs)</option>
-                <option value="1 to 3 days">1 to 3 days</option>
-                <option value="More than 3 days">More than 3 days</option>
-                <option value="Intermittent / recurring">Intermittent / recurring</option>
+                <option value="Just started today (< 24 hrs)" data-i18n="duration_today">Just started today (&lt; 24 hrs)</option>
+                <option value="1 to 3 days" data-i18n="duration_1_3">1 to 3 days</option>
+                <option value="More than 3 days" data-i18n="duration_gt3">More than 3 days</option>
+                <option value="Intermittent / recurring" data-i18n="duration_intermittent">Intermittent / recurring</option>
               </select>
             </div>
 
             <div class="form-row">
-              <label class="clean-label" for="symp-severity">Observed Severity:</label>
+              <label class="clean-label" for="symp-severity" data-i18n="severity_label">Observed Severity:</label>
               <select id="symp-severity" class="clean-select" onchange="runSymptomPrediction()">
-                <option value="Mild (Child is playful & feeding)">Mild (Child is playful &amp; feeding)</option>
-                <option value="Moderate (Fussy, reduced feeding)">Moderate (Fussy, reduced feeding)</option>
-                <option value="Severe (Lethargic, continuous crying)">Severe (Lethargic, continuous crying)</option>
+                <option value="Mild (Child is playful & feeding)" data-i18n="severity_mild">Mild (Child is playful &amp; feeding)</option>
+                <option value="Moderate (Fussy, reduced feeding)" data-i18n="severity_moderate">Moderate (Fussy, reduced feeding)</option>
+                <option value="Severe (Lethargic, continuous crying)" data-i18n="severity_severe">Severe (Lethargic, continuous crying)</option>
               </select>
             </div>
 
             <div class="form-row">
-              <label class="clean-label" for="symp-notes">Additional Observations:</label>
-              <input type="text" id="symp-notes" class="clean-input" placeholder="e.g. 4 watery stools today, mild tummy cramping, drinking water" />
+              <label class="clean-label" for="symp-notes" data-i18n="additional_obs">Additional Observations:</label>
+              <input type="text" id="symp-notes" class="clean-input" placeholder="e.g. 4 watery stools today, mild tummy cramping, drinking water" data-i18n-placeholder="symp_notes_placeholder" />
             </div>
 
-            <button type="button" class="btn-pill-primary w-100" onclick="saveSymptomEpisode()">
+            <button type="button" class="btn-pill-primary w-100" onclick="saveSymptomEpisode()" data-i18n="save_symptom_history">
               💾 Save Symptom Check to History
             </button>
           </div>
@@ -99,8 +110,8 @@
         <div class="symptom-guidance-card" id="symptom-guidance-panel">
           <div class="guidance-placeholder">
             <span class="big-icon">🩺</span>
-            <h3>Select a symptom on the left</h3>
-            <p>Our pediatric logic will analyze combinations and predict likely conditions (e.g. Diarrhea, URTI / Cold, Otitis Media) with comfort protocols.</p>
+            <h3 data-i18n="symptom_placeholder_title">Select a symptom on the left</h3>
+            <p data-i18n="symptom_placeholder_desc">Our pediatric logic will analyze combinations and predict likely conditions (e.g. Diarrhea, URTI / Cold, Otitis Media) with comfort protocols.</p>
           </div>
         </div>
       </div>
@@ -108,8 +119,8 @@
       <!-- Recent Symptom History Table -->
       <div style="margin-top: 48px; background: var(--white); border-radius: 24px; padding: 28px; border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-          <h3 class="card-inner-title">📋 Previous Symptom Records for this Child</h3>
-          <a href="history.html" class="btn-pill-outline btn-sm">View Full History &rarr;</a>
+          <h3 class="card-inner-title" data-i18n="previous_symptom_records">📋 Previous Symptom Records for this Child</h3>
+          <a href="history.html" class="btn-pill-outline btn-sm" data-i18n="view_full_history">View Full History →</a>
         </div>
         <div id="recent-symptoms-list">
           <!-- Populated by app.js -->
@@ -121,14 +132,15 @@
   <!-- Clean Minimal Footer -->
   <footer class="clean-footer">
     <div class="container footer-bottom-container">
-      <div>© 2026 Mukta Children Hospital, Amravati.</div>
-      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+      <div data-i18n="footer_copy_short">© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;" data-i18n="back_to_home_link">Back to Home</a>
     </div>
   </footer>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
+  <script src="translations.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>

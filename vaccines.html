@@ -26,13 +26,17 @@
       </a>
       <div style="display: flex; align-items: center; gap: 12px;">
         <!-- Language Selector -->
-        <div class="lang-selector-group" role="group" aria-label="Language Selector">
-          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
-          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
-          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        <div class="lang-select-wrap">
+          <label class="sr-only" for="mukta-lang-dropdown" data-i18n="language">Language</label>
+          <span class="lang-globe" aria-hidden="true">🌐</span>
+          <select id="mukta-lang-dropdown" class="lang-dropdown" onchange="setLanguage(this.value)" aria-label="Language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+          </select>
         </div>
         <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
-        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+        <strong id="nav-child-name" style="color: var(--text-dark);" data-i18n="active_child">Active Child</strong>
       </div>
     </div>
   </div>
@@ -93,8 +97,8 @@
 
   <footer class="clean-footer">
     <div class="container footer-bottom-container">
-      <div>© 2026 Mukta Children Hospital, Amravati.</div>
-      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+      <div data-i18n="footer_copy_short">© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;" data-i18n="back_to_home_link">Back to Home</a>
     </div>
   </footer>
 

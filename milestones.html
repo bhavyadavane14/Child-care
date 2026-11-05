@@ -26,13 +26,17 @@
       </a>
       <div style="display: flex; align-items: center; gap: 12px;">
         <!-- Language Selector -->
-        <div class="lang-selector-group" role="group" aria-label="Language Selector">
-          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
-          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
-          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        <div class="lang-select-wrap">
+          <label class="sr-only" for="mukta-lang-dropdown" data-i18n="language">Language</label>
+          <span class="lang-globe" aria-hidden="true">🌐</span>
+          <select id="mukta-lang-dropdown" class="lang-dropdown" onchange="setLanguage(this.value)" aria-label="Language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+          </select>
         </div>
         <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
-        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+        <strong id="nav-child-name" style="color: var(--text-dark);" data-i18n="active_child">Active Child</strong>
       </div>
     </div>
   </div>
@@ -62,7 +66,7 @@
           </div>
           <div class="stage-progress-badge">
             <span class="prog-pct" id="stage-prog-pct">100%</span>
-            <small>Observed</small>
+            <small data-i18n="observed">Observed</small>
           </div>
         </div>
 
@@ -72,7 +76,7 @@
           <div class="domain-card domain-motor">
             <div class="domain-header">
               <span class="domain-icon">🏃‍♂️</span>
-              <h4 class="domain-name">Gross &amp; Fine Motor</h4>
+              <h4 class="domain-name" data-i18n="domain_motor">Gross &amp; Fine Motor</h4>
             </div>
             <div class="domain-checklist" id="domain-motor-list"></div>
           </div>
@@ -81,7 +85,7 @@
           <div class="domain-card domain-social">
             <div class="domain-header">
               <span class="domain-icon">💖</span>
-              <h4 class="domain-name">Social &amp; Emotional</h4>
+              <h4 class="domain-name" data-i18n="domain_social">Social &amp; Emotional</h4>
             </div>
             <div class="domain-checklist" id="domain-social-list"></div>
           </div>
@@ -90,7 +94,7 @@
           <div class="domain-card domain-comm">
             <div class="domain-header">
               <span class="domain-icon">💬</span>
-              <h4 class="domain-name">Speech &amp; Language</h4>
+              <h4 class="domain-name" data-i18n="domain_comm">Speech &amp; Language</h4>
             </div>
             <div class="domain-checklist" id="domain-comm-list"></div>
           </div>
@@ -99,7 +103,7 @@
           <div class="domain-card domain-cogn">
             <div class="domain-header">
               <span class="domain-icon">🧩</span>
-              <h4 class="domain-name">Cognitive &amp; Play</h4>
+              <h4 class="domain-name" data-i18n="domain_cogn">Cognitive &amp; Play</h4>
             </div>
             <div class="domain-checklist" id="domain-cogn-list"></div>
           </div>
@@ -109,7 +113,10 @@
         <div class="gentle-milestone-advice">
           <span>💡</span>
           <div>
-            <strong>Every child develops at their own pace:</strong> Mild variations of a few weeks or months are very normal. If your child has not yet observed multiple milestones for their age, speak with <strong>Dr. Nitin Seth</strong> during your next routine OPD checkup.
+            <strong data-i18n="every_child_pace">Every child develops at their own pace:</strong>
+            <span data-i18n="milestone_advice_1">Mild variations of a few weeks or months are very normal. If your child has not yet observed multiple milestones for their age, speak with</span>
+            <strong>Dr. Nitin Seth</strong>
+            <span data-i18n="milestone_advice_2">during your next routine OPD checkup.</span>
           </div>
         </div>
       </div>
@@ -118,8 +125,8 @@
 
   <footer class="clean-footer">
     <div class="container footer-bottom-container">
-      <div>© 2026 Mukta Children Hospital, Amravati.</div>
-      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+      <div data-i18n="footer_copy_short">© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;" data-i18n="back_to_home_link">Back to Home</a>
     </div>
   </footer>
 

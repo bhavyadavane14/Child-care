@@ -53,7 +53,7 @@ function getDateFilterClause(filter, startDate, endDate, dateColumn = 'measureme
     const d = new Date(today);
     d.setMonth(d.getMonth() - 6);
     return { clause: `AND ${dateColumn} >= ?`, params: [d.toISOString().split('T')[0]] };
-  } else if (filter === 'last_1_year') {
+  } else if (filter === 'last_1_year' || filter === 'last_year' || filter === 'last_12_months') {
     const d = new Date(today);
     d.setFullYear(d.getFullYear() - 1);
     return { clause: `AND ${dateColumn} >= ?`, params: [d.toISOString().split('T')[0]] };
@@ -85,9 +85,51 @@ function sendJSON(res, statusCode, data) {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Mukta-User, X-Mukta-Admin'
   });
   res.end(JSON.stringify(data));
+}
+
+// ==========================================================================
+// Per-user data ownership
+// Each browser gets a lightweight user ID. A parent may only read/write
+// children (and records) whose parent_id matches that ID. The doctor
+// dashboard bypasses this check with the shared admin token.
+// ==========================================================================
+const ADMIN_TOKEN = 'doctormukta';
+const USER_ID_PATTERN = /^[A-Za-z0-9_-]{1,80}$/;
+
+function getRequestIdentity(req) {
+  const rawUser = String(req.headers['x-mukta-user'] || '').trim();
+  return {
+    userId: USER_ID_PATTERN.test(rawUser) ? rawUser : null,
+    isAdmin: String(req.headers['x-mukta-admin'] || '') === ADMIN_TOKEN
+  };
+}
+
+function ensureParentRow(userId) {
+  if (!userId) return null;
+  let parent = db.prepare('SELECT * FROM parents WHERE id = ?').get(userId);
+  if (!parent) {
+    db.prepare('INSERT INTO parents (id, full_name, email, phone) VALUES (?, ?, ?, ?)')
+      .run(userId, 'Parent', `${userId}@mukta.local`, null);
+    parent = db.prepare('SELECT * FROM parents WHERE id = ?').get(userId);
+  }
+  return parent;
+}
+
+// Returns the child row when the caller is allowed to access it.
+function getOwnedChild(childId, identity) {
+  if (!childId) return null;
+  const child = db.prepare('SELECT * FROM children WHERE id = ?').get(childId);
+  if (!child) return null;
+  if (identity.isAdmin) return child;
+  if (identity.userId && child.parent_id === identity.userId) return child;
+  return null;
+}
+
+function denyChildAccess(res) {
+  return sendJSON(res, 403, { error: 'You do not have access to this child profile' });
 }
 
 // HTTP Server
@@ -101,11 +143,13 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Mukta-User, X-Mukta-Admin'
     });
     res.end();
     return;
   }
+
+  const identity = getRequestIdentity(req);
 
   // ==========================================
   // REST API Routes
@@ -113,19 +157,29 @@ const server = http.createServer(async (req, res) => {
 
   // 1. GET /api/parent
   if (pathname === '/api/parent' && req.method === 'GET') {
-    const parent = db.prepare('SELECT * FROM parents LIMIT 1').get();
+    if (identity.isAdmin) {
+      return sendJSON(res, 200, db.prepare('SELECT * FROM parents LIMIT 1').get() || {});
+    }
+    const parent = identity.userId ? ensureParentRow(identity.userId) : null;
     return sendJSON(res, 200, parent || {});
   }
 
   // 2. GET /api/children & POST /api/children
   if (pathname === '/api/children') {
     if (req.method === 'GET') {
-      const children = db.prepare('SELECT * FROM children ORDER BY created_at ASC').all();
+      const children = identity.isAdmin
+        ? db.prepare('SELECT * FROM children ORDER BY created_at ASC').all()
+        : (identity.userId
+            ? db.prepare('SELECT * FROM children WHERE parent_id = ? ORDER BY created_at ASC').all(identity.userId)
+            : []);
       return sendJSON(res, 200, children);
     }
 
     if (req.method === 'POST') {
       try {
+        if (!identity.isAdmin && !identity.userId) {
+          return sendJSON(res, 401, { error: 'Missing user identity' });
+        }
         const body = await parseBody(req);
         const { full_name, dob, gender, blood_group, photo_url, parent_id } = body;
         if (!full_name || !dob || !gender) {
@@ -134,7 +188,11 @@ const server = http.createServer(async (req, res) => {
 
         const id = `child-${Date.now()}`;
         const uhid = `MUKTA-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const pId = parent_id || 'parent-1';
+        const pId = identity.isAdmin && parent_id
+          ? parent_id
+          : (identity.userId || parent_id || 'parent-1');
+
+        ensureParentRow(pId);
 
         const stmt = db.prepare(`
           INSERT INTO children (id, parent_id, full_name, dob, gender, blood_group, photo_url, uhid, pediatrician)
@@ -146,7 +204,7 @@ const server = http.createServer(async (req, res) => {
         db.prepare('INSERT INTO audit_logs (id, child_id, action, entity_type, entity_id, details) VALUES (?, ?, ?, ?, ?, ?)')
           .run(`aud-${Date.now()}`, id, 'CREATE', 'CHILD_PROFILE', id, `Registered child ${full_name}`);
 
-        return sendJSON(res, 201, { id, full_name, dob, gender, blood_group, uhid, photo_url });
+        return sendJSON(res, 201, { id, full_name, dob, gender, blood_group, uhid, photo_url, parent_id: pId });
       } catch (e) {
         return sendJSON(res, 500, { error: e.message });
       }
@@ -156,6 +214,7 @@ const server = http.createServer(async (req, res) => {
       try {
         const id = searchParams.get('id') || searchParams.get('childId');
         if (!id) return sendJSON(res, 400, { error: 'Missing child ID' });
+        if (!getOwnedChild(id, identity)) return denyChildAccess(res);
 
         db.prepare('DELETE FROM children WHERE id = ?').run(id);
         db.prepare('DELETE FROM growth_records WHERE child_id = ?').run(id);
@@ -181,6 +240,8 @@ const server = http.createServer(async (req, res) => {
     const childId = searchParams.get('childId');
 
     if (req.method === 'GET') {
+      if (!childId) return sendJSON(res, 200, []);
+      if (!getOwnedChild(childId, identity)) return denyChildAccess(res);
       const filter = searchParams.get('filter') || 'all';
       const sort = searchParams.get('sort') || 'DESC';
       const { clause, params } = getDateFilterClause(filter, searchParams.get('startDate'), searchParams.get('endDate'), 'measurement_date');
@@ -213,6 +274,7 @@ const server = http.createServer(async (req, res) => {
       try {
         const body = await parseBody(req);
         const { child_id, measurement_date, height_cm, weight_kg, head_circ_cm, age_months, bmi, bmi_category, notes } = body;
+        if (!getOwnedChild(child_id, identity)) return denyChildAccess(res);
         const id = `g-${Date.now()}`;
 
         const stmt = db.prepare(`
@@ -237,6 +299,7 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === 'GET') {
       if (!childId) return sendJSON(res, 200, []);
+      if (!getOwnedChild(childId, identity)) return denyChildAccess(res);
       const statusFilter = searchParams.get('status');
       let statusClause = '';
       const params = [childId];
@@ -259,6 +322,7 @@ const server = http.createServer(async (req, res) => {
       try {
         const body = await parseBody(req);
         const { child_id, vaccine_id, vaccine_name, dose_number, recommended_date, actual_date, status, hospital_details, doctor_name, notes, is_prescribed_by_doctor } = body;
+        if (!getOwnedChild(child_id, identity)) return denyChildAccess(res);
         
         // Sanitize: node:sqlite requires explicit null, not undefined
         const safeActualDate = actual_date || null;
@@ -309,6 +373,8 @@ const server = http.createServer(async (req, res) => {
     if (!childId && req.method === 'GET') return sendJSON(res, 200, []);
 
     if (req.method === 'GET') {
+      if (!childId) return sendJSON(res, 200, []);
+      if (!getOwnedChild(childId, identity)) return denyChildAccess(res);
       const filter = searchParams.get('filter') || 'all';
       const { clause, params } = getDateFilterClause(filter, searchParams.get('startDate'), searchParams.get('endDate'), 'onset_date');
 
@@ -324,6 +390,7 @@ const server = http.createServer(async (req, res) => {
       try {
         const body = await parseBody(req);
         const { child_id, symptom_id, symptom_name, onset_date, duration, severity, associated_symptoms, observations, recovery_notes } = body;
+        if (!getOwnedChild(child_id, identity)) return denyChildAccess(res);
         const id = `s-${Date.now()}`;
 
         db.prepare(`
@@ -344,6 +411,8 @@ const server = http.createServer(async (req, res) => {
     if (!childId && req.method === 'GET') return sendJSON(res, 200, []);
 
     if (req.method === 'GET') {
+      if (!childId) return sendJSON(res, 200, []);
+      if (!getOwnedChild(childId, identity)) return denyChildAccess(res);
       const records = db.prepare(`
         SELECT * FROM milestone_records 
         WHERE child_id = ?
@@ -355,18 +424,25 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST') {
       try {
         const body = await parseBody(req);
-        const { child_id, milestone_id, milestone_text, age_group, domain, status, achieved_date, notes } = body;
+        const { child_id, milestone_id, age_group, domain, status, achieved_date, notes } = body;
+        if (!getOwnedChild(child_id, identity)) return denyChildAccess(res);
+        const text = body.milestone_text || body.milestone_name;
+        if (!child_id || !milestone_id || !text) {
+          return sendJSON(res, 400, { error: 'Missing required milestone fields' });
+        }
+        const safeStatus = status || 'Achieved';
+        const safeDate = achieved_date || null;
 
         const existing = db.prepare('SELECT id FROM milestone_records WHERE child_id = ? AND milestone_id = ?').get(child_id, milestone_id);
         if (existing) {
-          db.prepare('UPDATE milestone_records SET status = ?, achieved_date = ?, notes = ? WHERE id = ?')
-            .run(status, achieved_date, notes || null, existing.id);
+          db.prepare('UPDATE milestone_records SET milestone_text = ?, status = ?, achieved_date = ?, notes = ? WHERE id = ?')
+            .run(text, safeStatus, safeDate, notes || null, existing.id);
         } else {
           const id = `m-${Date.now()}`;
           db.prepare(`
             INSERT INTO milestone_records (id, child_id, milestone_id, milestone_text, age_group, domain, status, achieved_date, notes)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `).run(id, child_id, milestone_id, milestone_text, age_group, domain, status, achieved_date, notes || null);
+          `).run(id, child_id, milestone_id, text, age_group || 'Unknown', domain || 'General', safeStatus, safeDate, notes || null);
         }
 
         return sendJSON(res, 200, { success: true });
@@ -378,9 +454,11 @@ const server = http.createServer(async (req, res) => {
 
   // 7. GET & POST /api/documents
   if (pathname === '/api/documents') {
-    const childId = searchParams.get('childId') || 'child-1';
+    const childId = searchParams.get('childId');
 
     if (req.method === 'GET') {
+      if (!childId) return sendJSON(res, 200, []);
+      if (!getOwnedChild(childId, identity)) return denyChildAccess(res);
       const category = searchParams.get('category');
       let catClause = '';
       const params = [childId];
@@ -402,6 +480,7 @@ const server = http.createServer(async (req, res) => {
       try {
         const body = await parseBody(req);
         const { child_id, document_name, category, medical_record_date, file_type, file_size, file_data, notes } = body;
+        if (!getOwnedChild(child_id, identity)) return denyChildAccess(res);
         const id = `doc-${Date.now()}`;
 
         db.prepare(`
@@ -418,9 +497,11 @@ const server = http.createServer(async (req, res) => {
 
   // 8. GET & POST /api/nutrition
   if (pathname === '/api/nutrition') {
-    const childId = searchParams.get('childId') || 'child-1';
+    const childId = searchParams.get('childId');
 
     if (req.method === 'GET') {
+      if (!childId) return sendJSON(res, 200, []);
+      if (!getOwnedChild(childId, identity)) return denyChildAccess(res);
       const records = db.prepare(`
         SELECT * FROM nutrition_records 
         WHERE child_id = ? 
@@ -433,6 +514,7 @@ const server = http.createServer(async (req, res) => {
       try {
         const body = await parseBody(req);
         const { child_id, feeding_datetime, meal_category, food_details, is_first_time, observations, concerns } = body;
+        if (!getOwnedChild(child_id, identity)) return denyChildAccess(res);
         const id = `n-${Date.now()}`;
 
         db.prepare(`
@@ -449,9 +531,11 @@ const server = http.createServer(async (req, res) => {
 
   // 9. GET & POST /api/appointments
   if (pathname === '/api/appointments') {
-    const childId = searchParams.get('childId') || 'child-1';
+    const childId = searchParams.get('childId');
 
     if (req.method === 'GET') {
+      if (!childId) return sendJSON(res, 200, []);
+      if (!getOwnedChild(childId, identity)) return denyChildAccess(res);
       const records = db.prepare(`
         SELECT * FROM appointments 
         WHERE child_id = ? 
@@ -464,6 +548,7 @@ const server = http.createServer(async (req, res) => {
       try {
         const body = await parseBody(req);
         const { child_id, doctor_id, doctor_name, department, appointment_date, time_slot, type } = body;
+        if (!getOwnedChild(child_id, identity)) return denyChildAccess(res);
         const id = `apt-${Date.now()}`;
         const ref_code = `MUKTA-APT-${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -482,6 +567,9 @@ const server = http.createServer(async (req, res) => {
   // Cancel Appointment
   if (pathname.startsWith('/api/appointments/') && req.method === 'DELETE') {
     const aptId = pathname.split('/').pop();
+    const apt = db.prepare('SELECT child_id FROM appointments WHERE id = ?').get(aptId);
+    if (!apt) return sendJSON(res, 404, { error: 'Appointment not found' });
+    if (!getOwnedChild(apt.child_id, identity)) return denyChildAccess(res);
     db.prepare('UPDATE appointments SET status = ? WHERE id = ?').run('Cancelled', aptId);
     return sendJSON(res, 200, { success: true });
   }
@@ -489,17 +577,18 @@ const server = http.createServer(async (req, res) => {
   // 10. MASTER CENTRAL HEALTH HISTORY API (Section 6: My Child's Health History)
   // Aggregates Growth, Vaccines, Symptoms, Milestones, Documents, Nutrition, Appointments
   if (pathname === '/api/history' && req.method === 'GET') {
-    const childId = searchParams.get('childId');
+    const childId = searchParams.get('childId') || searchParams.get('child_id');
     if (!childId) return sendJSON(res, 200, []);
-    const filter = searchParams.get('filter') || 'all';
-    const category = searchParams.get('category') || 'All'; // 'Growth', 'Symptom', 'Vaccination', 'Milestone', 'Document', 'Nutrition', 'Appointment'
+    if (!getOwnedChild(childId, identity)) return denyChildAccess(res);
+    const filter = (searchParams.get('filter') || 'all').toLowerCase();
+    const category = (searchParams.get('category') || 'all').toLowerCase(); // growth, symptom, vaccination, milestone, document, nutrition, appointment
     const search = searchParams.get('search') ? searchParams.get('search').toLowerCase() : '';
     const sort = searchParams.get('sort') || 'DESC'; // 'DESC' or 'ASC'
 
     const timeline = [];
 
     // 1. Growth
-    if (category === 'All' || category === 'Growth') {
+    if (category === 'all' || category === 'growth') {
       const { clause, params } = getDateFilterClause(filter, searchParams.get('startDate'), searchParams.get('endDate'), 'measurement_date');
       const rows = db.prepare(`SELECT * FROM growth_records WHERE child_id = ? ${clause}`).all(childId, ...params);
       rows.forEach(r => {
@@ -518,7 +607,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 2. Vaccinations
-    if (category === 'All' || category === 'Vaccination') {
+    if (category === 'all' || category === 'vaccination') {
       const { clause, params } = getDateFilterClause(filter, searchParams.get('startDate'), searchParams.get('endDate'), 'actual_date');
       const rows = db.prepare(`SELECT * FROM vaccination_records WHERE child_id = ? AND actual_date IS NOT NULL ${clause}`).all(childId, ...params);
       rows.forEach(r => {
@@ -537,7 +626,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 3. Symptoms
-    if (category === 'All' || category === 'Symptom') {
+    if (category === 'all' || category === 'symptom') {
       const { clause, params } = getDateFilterClause(filter, searchParams.get('startDate'), searchParams.get('endDate'), 'onset_date');
       const rows = db.prepare(`SELECT * FROM symptom_records WHERE child_id = ? ${clause}`).all(childId, ...params);
       rows.forEach(r => {
@@ -556,7 +645,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 4. Milestones
-    if (category === 'All' || category === 'Milestone') {
+    if (category === 'all' || category === 'milestone') {
       const { clause, params } = getDateFilterClause(filter, searchParams.get('startDate'), searchParams.get('endDate'), 'achieved_date');
       const rows = db.prepare(`SELECT * FROM milestone_records WHERE child_id = ? AND achieved_date IS NOT NULL ${clause}`).all(childId, ...params);
       rows.forEach(r => {
@@ -575,7 +664,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 5. Medical Documents
-    if (category === 'All' || category === 'Document') {
+    if (category === 'all' || category === 'document') {
       const { clause, params } = getDateFilterClause(filter, searchParams.get('startDate'), searchParams.get('endDate'), 'medical_record_date');
       const rows = db.prepare(`SELECT * FROM medical_documents WHERE child_id = ? ${clause}`).all(childId, ...params);
       rows.forEach(r => {
@@ -594,7 +683,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 6. Nutrition
-    if (category === 'All' || category === 'Nutrition') {
+    if (category === 'all' || category === 'nutrition') {
       const rows = db.prepare(`SELECT * FROM nutrition_records WHERE child_id = ?`).all(childId);
       rows.forEach(r => {
         const dateOnly = r.feeding_datetime.split(' ')[0];
@@ -613,7 +702,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 7. Appointments
-    if (category === 'All' || category === 'Appointment') {
+    if (category === 'all' || category === 'appointment') {
       const { clause, params } = getDateFilterClause(filter, searchParams.get('startDate'), searchParams.get('endDate'), 'appointment_date');
       const rows = db.prepare(`SELECT * FROM appointments WHERE child_id = ? ${clause}`).all(childId, ...params);
       rows.forEach(r => {
@@ -648,11 +737,19 @@ const server = http.createServer(async (req, res) => {
       return sort === 'ASC' ? dateA - dateB : dateB - dateA;
     });
 
-    return sendJSON(res, 200, filtered);
+    // Add the shape expected by the timeline renderer / CSV exporter
+    const enriched = filtered.map(item => ({
+      ...item,
+      type: String(item.activity || '').toLowerCase(),
+      data: { ...(item.data || {}), notes: item.notes || item.details || '' }
+    }));
+
+    return sendJSON(res, 200, enriched);
   }
 
   // 11. ADMIN API: GET /api/admin/stats
   if (pathname === '/api/admin/stats' && req.method === 'GET') {
+    if (!identity.isAdmin) return sendJSON(res, 403, { error: 'Admin access required' });
     const totalChildren = db.prepare('SELECT COUNT(*) as c FROM children').get().c;
     const vaccinesTaken = db.prepare("SELECT COUNT(*) as c FROM vaccination_records WHERE status = 'Completed'").get().c;
     const vaccinesPending = db.prepare("SELECT COUNT(*) as c FROM vaccination_records WHERE status != 'Completed'").get().c;
@@ -661,9 +758,43 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ==========================================
-  // Static File Serving
+  // Static File Serving (front-end assets only)
   // ==========================================
-  let filePath = path.join(PUBLIC_DIR, pathname === '/' ? 'index.html' : pathname);
+  const STATIC_ALLOWED_EXTENSIONS = new Set([
+    '.html', '.css', '.js', '.png', '.jpg', '.jpeg', '.svg', '.ico', '.webp'
+  ]);
+  // Never expose server code, secrets, database files or test scripts.
+  const STATIC_PRIVATE_NAMES = new Set([
+    'server.js', 'db.js', 'package.json', 'package-lock.json', 'vercel.json',
+    '.env', '.env.local', '.env.production', '.gitignore',
+    'mukta_health.db', 'mukta_health.db-shm', 'mukta_health.db-wal',
+    'e2e_test.js', 'test_handler.js', 'test_system.js', 'api'
+  ]);
+
+  // Admin portal is only reachable through the clean /admin URL.
+  if (pathname === '/admin.html') {
+    res.writeHead(301, { Location: '/admin' });
+    res.end();
+    return;
+  }
+
+  const requestedPath = pathname === '/'
+    ? 'index.html'
+    : (pathname === '/admin' || pathname === '/admin/')
+      ? 'admin.html'
+      : pathname.replace(/^\/+/, '');
+  const requestedExt = path.extname(requestedPath).toLowerCase();
+  const requestedParts = requestedPath.split(/[\\/]/);
+  const isPrivatePath = requestedPath.includes('..') ||
+    requestedParts.some(part => STATIC_PRIVATE_NAMES.has(part.toLowerCase()));
+
+  if (isPrivatePath || !STATIC_ALLOWED_EXTENSIONS.has(requestedExt)) {
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('404 Not Found');
+    return;
+  }
+
+  let filePath = path.join(PUBLIC_DIR, requestedPath);
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {

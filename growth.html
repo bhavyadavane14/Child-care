@@ -29,13 +29,17 @@
       </a>
       <div style="display: flex; align-items: center; gap: 12px;">
         <!-- Language Selector -->
-        <div class="lang-selector-group" role="group" aria-label="Language Selector">
-          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
-          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
-          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        <div class="lang-select-wrap">
+          <label class="sr-only" for="mukta-lang-dropdown" data-i18n="language">Language</label>
+          <span class="lang-globe" aria-hidden="true">🌐</span>
+          <select id="mukta-lang-dropdown" class="lang-dropdown" onchange="setLanguage(this.value)" aria-label="Language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+          </select>
         </div>
         <span id="nav-child-avatar" style="font-size: 1.4rem;">👶</span>
-        <strong id="nav-child-name" style="color: var(--text-dark);">Active Child</strong>
+        <strong id="nav-child-name" style="color: var(--text-dark);" data-i18n="active_child">Active Child</strong>
       </div>
     </div>
   </div>
@@ -57,49 +61,49 @@
       <div class="growth-layout-grid">
         <!-- Left: Input Form Card -->
         <div class="growth-form-card">
-          <h2 class="card-inner-title">📏 Log Measurement</h2>
-          <p class="card-inner-desc">Every measurement is permanently saved with its date. Prior records are never overwritten.</p>
+          <h2 class="card-inner-title" data-i18n="log_measurement_title">📏 Log Measurement</h2>
+          <p class="card-inner-desc" data-i18n="log_measurement_desc">Every measurement is permanently saved with its date. Prior records are never overwritten.</p>
 
           <form id="growth-record-form" onsubmit="handleGrowthSubmit(event)">
             <div class="form-row">
-              <label class="clean-label" for="growth-date">Measurement Date *</label>
+              <label class="clean-label" for="growth-date" data-i18n="measurement_date_req">Measurement Date *</label>
               <input type="date" id="growth-date" class="clean-input" required />
             </div>
 
             <div class="form-row-grid2">
               <div>
-                <label class="clean-label" for="growth-height">Height (cm) *</label>
+                <label class="clean-label" for="growth-height" data-i18n="height_cm_required">Height (cm) *</label>
                 <input type="number" id="growth-height" class="clean-input" step="0.1" min="30" max="220" placeholder="e.g. 96.5" required oninput="previewBMI()" />
               </div>
               <div>
-                <label class="clean-label" for="growth-weight">Weight (kg) *</label>
+                <label class="clean-label" for="growth-weight" data-i18n="weight_kg_required">Weight (kg) *</label>
                 <input type="number" id="growth-weight" class="clean-input" step="0.05" min="1" max="150" placeholder="e.g. 14.5" required oninput="previewBMI()" />
               </div>
             </div>
 
             <div class="form-row">
-              <label class="clean-label" for="growth-head">Head Circumference (cm) <span class="optional-tag">(optional)</span></label>
+              <label class="clean-label" for="growth-head"><span data-i18n="head_circ_cm">Head Circumference (cm)</span> <span class="optional-tag" data-i18n="optional">(optional)</span></label>
               <input type="number" id="growth-head" class="clean-input" step="0.1" min="25" max="65" placeholder="e.g. 49.5" />
             </div>
 
             <div class="form-row">
-              <label class="clean-label" for="growth-notes">Clinical Notes</label>
-              <input type="text" id="growth-notes" class="clean-input" placeholder="e.g. Active, good appetite, routine visit" />
+              <label class="clean-label" for="growth-notes" data-i18n="clinical_notes">Clinical Notes</label>
+              <input type="text" id="growth-notes" class="clean-input" placeholder="e.g. Active, good appetite, routine visit" data-i18n-placeholder="clinical_notes_placeholder" />
             </div>
 
             <!-- Live Calculated BMI Badge -->
             <div class="bmi-live-preview" id="bmi-live-preview">
               <div class="bmi-calc-box">
-                <span class="bmi-calc-title">Calculated BMI</span>
+                <span class="bmi-calc-title" data-i18n="calculated_bmi">Calculated BMI</span>
                 <span class="bmi-calc-value" id="live-bmi-num">--</span>
               </div>
               <div class="bmi-calc-box">
-                <span class="bmi-calc-title">WHO Interpretation</span>
-                <span class="bmi-calc-cat text-success" id="live-bmi-cat">Awaiting inputs</span>
+                <span class="bmi-calc-title" data-i18n="who_interpretation">WHO Interpretation</span>
+                <span class="bmi-calc-cat text-success" id="live-bmi-cat" data-i18n="awaiting_inputs">Awaiting inputs</span>
               </div>
             </div>
 
-            <button type="submit" class="btn-pill-primary w-100" style="margin-top: 16px;">
+            <button type="submit" class="btn-pill-primary w-100" style="margin-top: 16px;" data-i18n="save_measurement_history">
               💾 Save Measurement to History
             </button>
           </form>
@@ -109,12 +113,12 @@
         <div class="growth-chart-card">
           <div class="chart-header-row">
             <div>
-              <h3 class="card-inner-title">📊 WHO Growth Standards Chart</h3>
-              <p class="card-inner-desc">Interactive curves comparing your child against WHO 5th, 50th, and 95th percentiles.</p>
+              <h3 class="card-inner-title" data-i18n="who_chart_title">📊 WHO Growth Standards Chart</h3>
+              <p class="card-inner-desc" data-i18n="who_chart_desc">Interactive curves comparing your child against WHO 5th, 50th, and 95th percentiles.</p>
             </div>
             <div class="chart-metric-toggle">
-              <button class="metric-btn active" id="btn-chart-height" onclick="setChartMetric('height')">Height (cm)</button>
-              <button class="metric-btn" id="btn-chart-weight" onclick="setChartMetric('weight')">Weight (kg)</button>
+              <button class="metric-btn active" id="btn-chart-height" onclick="setChartMetric('height')" data-i18n="chart_height">Height (cm)</button>
+              <button class="metric-btn" id="btn-chart-weight" onclick="setChartMetric('weight')" data-i18n="chart_weight">Weight (kg)</button>
             </div>
           </div>
 
@@ -125,25 +129,25 @@
           <!-- Growth History Table -->
           <div class="growth-history-block">
             <div class="history-block-header">
-              <h3 class="history-block-title">📋 Measurement Progression History</h3>
-              <button class="btn-pill-outline btn-sm" onclick="exportGrowthHistory()">📥 Export CSV</button>
+              <h3 class="history-block-title" data-i18n="measurement_progression">📋 Measurement Progression History</h3>
+              <button class="btn-pill-outline btn-sm" onclick="exportGrowthHistory()" data-i18n="export_csv_btn_short">📥 Export CSV</button>
             </div>
 
             <div class="table-responsive-wrapper">
               <table class="clean-history-table">
                 <thead>
                   <tr>
-                    <th>Date</th>
-                    <th>Age</th>
-                    <th>Height</th>
-                    <th>Weight</th>
-                    <th>Head Circ.</th>
-                    <th>BMI</th>
+                    <th data-i18n="col_date">Date</th>
+                    <th data-i18n="col_age">Age</th>
+                    <th data-i18n="col_height">Height</th>
+                    <th data-i18n="col_weight">Weight</th>
+                    <th data-i18n="col_head_circ">Head Circ.</th>
+                    <th data-i18n="col_bmi">BMI</th>
                   </tr>
                 </thead>
                 <tbody id="growth-history-tbody">
                   <tr>
-                    <td colspan="6" class="text-center text-muted">Loading growth progression...</td>
+                    <td colspan="6" class="text-center text-muted" data-i18n="loading_growth">Loading growth progression...</td>
                   </tr>
                 </tbody>
               </table>
@@ -156,8 +160,8 @@
 
   <footer class="clean-footer">
     <div class="container footer-bottom-container">
-      <div>© 2026 Mukta Children Hospital, Amravati.</div>
-      <a href="index.html" style="color: #94A3B8;">Back to Home</a>
+      <div data-i18n="footer_copy_short">© 2026 Mukta Children Hospital, Amravati.</div>
+      <a href="index.html" style="color: #94A3B8;" data-i18n="back_to_home_link">Back to Home</a>
     </div>
   </footer>
 

@@ -42,10 +42,14 @@
       <!-- Right: Action Buttons & Hamburger -->
       <div class="nav-actions">
         <!-- Language Selector -->
-        <div class="lang-selector-group" role="group" aria-label="Language Selector">
-          <button class="lang-select-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
-          <button class="lang-select-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
-          <button class="lang-select-btn" data-lang="mr" onclick="setLanguage('mr')">मराठी</button>
+        <div class="lang-select-wrap">
+          <label class="sr-only" for="mukta-lang-dropdown" data-i18n="language">Language</label>
+          <span class="lang-globe" aria-hidden="true">🌐</span>
+          <select id="mukta-lang-dropdown" class="lang-dropdown" onchange="setLanguage(this.value)" aria-label="Language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+          </select>
         </div>
 
         <!-- Active Child Quick Pill -->
@@ -73,8 +77,8 @@
       <div class="drawer-brand">
         <img src="logo.jpg" alt="Mukta Logo" class="drawer-logo" />
         <div>
-          <div class="drawer-title">Mukta Health Hub</div>
-          <div class="drawer-sub">Digital Companion</div>
+          <div class="drawer-title" data-i18n="drawer_title">Mukta Health Hub</div>
+          <div class="drawer-sub" data-i18n="drawer_sub">Digital Companion</div>
         </div>
       </div>
       <button class="drawer-close" onclick="toggleDrawer()" aria-label="Close menu">✕</button>
@@ -84,51 +88,51 @@
     <div class="drawer-child-card" id="drawer-child-card-box">
       <div class="drawer-child-avatar" id="drawer-child-avatar">👶</div>
       <div class="drawer-child-info">
-        <div class="drawer-child-name" id="drawer-child-name">No Child Selected</div>
-        <div class="drawer-child-age" id="drawer-child-age">Add your child below</div>
+        <div class="drawer-child-name" id="drawer-child-name" data-i18n="no_child_selected">No Child Selected</div>
+        <div class="drawer-child-age" id="drawer-child-age" data-i18n="add_child_below">Add your child below</div>
       </div>
-      <button class="drawer-switch-btn" onclick="openModal('child-modal'); toggleDrawer();">+ Add Child</button>
+      <button class="drawer-switch-btn" onclick="openModal('child-modal'); toggleDrawer();" data-i18n="add_child">+ Add Child</button>
     </div>
 
     <nav class="drawer-nav">
       <a href="index.html" class="drawer-link active">
         <span class="d-icon" style="background: #E5F4FF;">🏠</span>
-        <span class="d-text">Home &amp; Child Profile</span>
+        <span class="d-text" data-i18n="nav_home">Home &amp; Child Profile</span>
       </a>
 
       <a href="growth.html" class="drawer-link">
         <span class="d-icon" style="background: #E5F4FF;">📈</span>
-        <span class="d-text">Growth &amp; BMI Calculator</span>
+        <span class="d-text" data-i18n="nav_growth">Growth &amp; BMI Calculator</span>
       </a>
       <a href="vaccines.html" class="drawer-link">
         <span class="d-icon" style="background: #E4F7ED;">💉</span>
-        <span class="d-text">Vaccination Tracker</span>
+        <span class="d-text" data-i18n="nav_vaccines">Vaccination Tracker</span>
       </a>
       <a href="milestones.html" class="drawer-link">
         <span class="d-icon" style="background: #FFF5D8;">🌱</span>
-        <span class="d-text">Development Milestones</span>
+        <span class="d-text" data-i18n="nav_milestones">Development Milestones</span>
       </a>
       <a href="history.html" class="drawer-link">
         <span class="d-icon" style="background: #F0EAFF;">📜</span>
-        <span class="d-text">My Child's Health History</span>
+        <span class="d-text" data-i18n="nav_history">My Child's Health History</span>
       </a>
       <a href="knowledge.html" class="drawer-link">
         <span class="d-icon" style="background: #FFF5D8;">📚</span>
-        <span class="d-text">Parenting Knowledge Centre</span>
+        <span class="d-text" data-i18n="nav_knowledge">Parenting Knowledge Centre</span>
       </a>
       <a href="#reminders" class="drawer-link" onclick="closeDrawerAndScroll(event, 'reminders')">
         <span class="d-icon" style="background: #E4F7ED;">🔔</span>
-        <span class="d-text">Health Reminders</span>
+        <span class="d-text" data-i18n="nav_reminders">Health Reminders</span>
       </a>
       <a href="#emergency" class="drawer-link" onclick="closeDrawerAndScroll(event, 'emergency')">
         <span class="d-icon" style="background: #FFE9EF;">🚨</span>
-        <span class="d-text">Emergency Contact</span>
+        <span class="d-text" data-i18n="nav_emergency">Emergency Contact</span>
       </a>
     </nav>
 
     <div class="drawer-footer">
-      <div>Mukta Children Hospital · Amravati</div>
-      <div style="font-size: 0.72rem; color: #6B7A8D; margin-top: 2px;">Established 1991 · Dr. Nitin Seth</div>
+      <div data-i18n="hospital_name">Mukta Children Hospital · Amravati</div>
+      <div style="font-size: 0.72rem; color: #6B7A8D; margin-top: 2px;" data-i18n="hospital_tagline">Established 1991 · Dr. Nitin Seth</div>
     </div>
   </aside>
 
@@ -197,16 +201,16 @@
           <div class="floating-badge badge-vaccine">
             <span class="float-icon">💉</span>
             <div class="float-text">
-              <strong>Vaccines on Track</strong>
-              <small>IAP Schedule</small>
+              <strong data-i18n="float_vaccines_title">Vaccines on Track</strong>
+              <small data-i18n="float_vaccines_sub">IAP Schedule</small>
             </div>
           </div>
 
           <div class="floating-badge badge-growth">
             <span class="float-icon">📈</span>
             <div class="float-text">
-              <strong>Healthy Growth</strong>
-              <small>WHO Percentiles</small>
+              <strong data-i18n="float_growth_title">Healthy Growth</strong>
+              <small data-i18n="float_growth_sub">WHO Percentiles</small>
             </div>
           </div>
         </div>
@@ -298,16 +302,6 @@
             <span class="feature-explore-btn" data-i18n="card_knowledge_btn">Read Parenting Articles →</span>
           </div>
         </a>
-
-        <!-- Card 6: Doctor & Staff Portal -->
-        <a href="admin.html" class="health-feature-card card-pink" style="text-decoration: none;">
-          <div class="feature-card-icon" style="background: #FFE9EF;">🩺</div>
-          <h3 class="feature-card-title" data-i18n="card_admin_title">Doctor &amp; Hospital Portal</h3>
-          <p class="feature-card-desc" data-i18n="card_admin_desc">Clinical dashboard for pediatricians to monitor registered child patients, prescribe vaccine reminders, and inspect logs.</p>
-          <div class="feature-card-footer">
-            <span class="feature-explore-btn" data-i18n="card_admin_btn">Open Doctor Portal →</span>
-          </div>
-        </a>
       </div>
     </div>
   </section>
@@ -318,9 +312,9 @@
   <section class="section reminders-section" id="reminders">
     <div class="container">
       <div class="section-heading text-center">
-        <div class="section-tag tag-mint">🔔 Stay Ahead</div>
-        <h2 class="section-title">Health Reminders</h2>
-        <p class="section-desc">Timely alerts for upcoming vaccine booster doses and quarterly growth milestones.</p>
+        <div class="section-tag tag-mint" data-i18n="reminders_tag">🔔 Stay Ahead</div>
+        <h2 class="section-title" data-i18n="reminders_title">Health Reminders</h2>
+        <p class="section-desc" data-i18n="reminders_desc">Timely alerts for upcoming vaccine booster doses and quarterly growth milestones.</p>
       </div>
 
       <div class="reminders-cards-grid" id="reminders-container">
@@ -336,45 +330,45 @@
     <div class="container">
       <div class="emergency-banner-card">
         <div class="emergency-content-col">
-          <div class="emergency-badge">🚨 24/7 PEDIATRIC EMERGENCY &amp; NICU</div>
-          <h2 class="emergency-title">Mukta Children Hospital</h2>
-          <p class="emergency-subtitle">Trusted Pediatric Excellence Since 1991 · Dr. Nitin Seth (MBBS, DCH)</p>
+          <div class="emergency-badge" data-i18n="emergency_badge">🚨 24/7 PEDIATRIC EMERGENCY &amp; NICU</div>
+          <h2 class="emergency-title" data-i18n="emergency_title">Mukta Children Hospital</h2>
+          <p class="emergency-subtitle" data-i18n="emergency_subtitle">Trusted Pediatric Excellence Since 1991 · Dr. Nitin Seth (MBBS, DCH)</p>
 
           <div class="emergency-details-grid">
             <div class="e-detail-item">
               <span class="e-icon">📍</span>
               <div>
-                <strong>Location &amp; Address:</strong>
-                <div>Rallies Plot, Opp. Agrasen Bhavan, Amravati, Maharashtra 444601</div>
+                <strong data-i18n="location_label">Location &amp; Address:</strong>
+                <div data-i18n="location_value">Rallies Plot, Opp. Agrasen Bhavan, Amravati, Maharashtra 444601</div>
               </div>
             </div>
             <div class="e-detail-item">
               <span class="e-icon">🕒</span>
               <div>
-                <strong>OPD Timings:</strong>
-                <div>Monday to Saturday: 9:00 AM – 8:30 PM (Emergency open 24 Hours)</div>
+                <strong data-i18n="opd_label">OPD Timings:</strong>
+                <div data-i18n="opd_value">Monday to Saturday: 9:00 AM – 8:30 PM (Emergency open 24 Hours)</div>
               </div>
             </div>
           </div>
 
           <div class="emergency-cta-row">
-            <a href="tel:+919823045678" class="btn-emergency-call">
+            <a href="tel:+919823045678" class="btn-emergency-call" data-i18n="call_emergency">
               📞 Call Emergency: +91 98230 45678
             </a>
-            <a href="https://maps.google.com/?q=Mukta+Children+Hospital+Amravati" target="_blank" rel="noopener" class="btn-emergency-directions">
+            <a href="https://maps.google.com/?q=Mukta+Children+Hospital+Amravati" target="_blank" rel="noopener" class="btn-emergency-directions" data-i18n="get_directions">
               🗺️ Get Directions
             </a>
           </div>
         </div>
 
         <div class="emergency-triage-col">
-          <h4 class="triage-title">🚨 When to Seek Emergency Care Immediately:</h4>
+          <h4 class="triage-title" data-i18n="triage_title">🚨 When to Seek Emergency Care Immediately:</h4>
           <ul class="triage-list">
-            <li>High fever (&gt;104°F / 40°C) unresponsive to medicine</li>
-            <li>Laboured, unusually fast, or grunting breathing</li>
-            <li>Bluish tinge around lips or fingernails</li>
-            <li>Severe dehydration, no tears or wet diapers &gt; 8 hours</li>
-            <li>Convulsions, seizures, or unresponsiveness</li>
+            <li data-i18n="triage_1">High fever (&gt;104°F / 40°C) unresponsive to medicine</li>
+            <li data-i18n="triage_2">Laboured, unusually fast, or grunting breathing</li>
+            <li data-i18n="triage_3">Bluish tinge around lips or fingernails</li>
+            <li data-i18n="triage_4">Severe dehydration, no tears or wet diapers &gt; 8 hours</li>
+            <li data-i18n="triage_5">Convulsions, seizures, or unresponsiveness</li>
           </ul>
         </div>
       </div>
@@ -390,43 +384,43 @@
         <div class="footer-logo-row">
           <img src="logo.jpg" alt="Mukta Hospital Logo" class="footer-logo-img" />
           <div>
-            <h3 class="footer-brand-name">Mukta Child Health Hub</h3>
-            <span class="footer-brand-tag">A Digital Health Companion</span>
+            <h3 class="footer-brand-name" data-i18n="brand_title">Mukta Child Health Hub</h3>
+            <span class="footer-brand-tag" data-i18n="brand_subtitle">A Digital Health Companion</span>
           </div>
         </div>
-        <p class="footer-brand-p">
+        <p class="footer-brand-p" data-i18n="footer_brand_desc">
           Dedicated to your child's lifelong wellness. Combining compassionate pediatric expertise with modern digital health records.
         </p>
-        <div class="footer-accreditation">
+        <div class="footer-accreditation" data-i18n="footer_accreditation">
           Mukta Children Hospital · Rallies Plot, Amravati 444601 · Dr. Nitin Seth
         </div>
       </div>
 
       <div class="footer-col-links">
-        <h4 class="footer-heading">Health Pages</h4>
+        <h4 class="footer-heading" data-i18n="footer_health_pages">Health Pages</h4>
         <ul class="footer-links-list">
 
-          <li><a href="growth.html">Growth &amp; BMI Calculator</a></li>
-          <li><a href="vaccines.html">Vaccination Tracker</a></li>
-          <li><a href="milestones.html">Development Milestones</a></li>
-          <li><a href="history.html">My Child's Health History</a></li>
-          <li><a href="knowledge.html">Parenting Knowledge Centre</a></li>
+          <li><a href="growth.html" data-i18n="nav_growth">Growth &amp; BMI Calculator</a></li>
+          <li><a href="vaccines.html" data-i18n="nav_vaccines">Vaccination Tracker</a></li>
+          <li><a href="milestones.html" data-i18n="nav_milestones">Development Milestones</a></li>
+          <li><a href="history.html" data-i18n="nav_history">My Child's Health History</a></li>
+          <li><a href="knowledge.html" data-i18n="nav_knowledge">Parenting Knowledge Centre</a></li>
         </ul>
       </div>
 
       <div class="footer-col-contact">
-        <h4 class="footer-heading">Hospital Contact</h4>
-        <p><strong>Mukta Children Hospital</strong></p>
-        <p>Opp. Agrasen Bhavan, Rallies Plot, Amravati, Maharashtra 444601</p>
-        <p>Emergency: <strong>+91 98230 45678</strong></p>
-        <p>Email: info@muktachildrenhospital.in</p>
+        <h4 class="footer-heading" data-i18n="footer_hospital_contact">Hospital Contact</h4>
+        <p><strong data-i18n="emergency_title">Mukta Children Hospital</strong></p>
+        <p data-i18n="footer_address">Opp. Agrasen Bhavan, Rallies Plot, Amravati, Maharashtra 444601</p>
+        <p><span data-i18n="footer_emergency">Emergency:</span> <strong>+91 98230 45678</strong></p>
+        <p><span data-i18n="footer_email">Email:</span> info@muktachildrenhospital.in</p>
       </div>
     </div>
 
     <div class="footer-bottom-bar">
       <div class="container footer-bottom-container">
-        <div>© 2026 Mukta Children Hospital, Amravati. All rights reserved.</div>
-        <div class="footer-privacy-note">
+        <div data-i18n="footer_copy_short">© 2026 Mukta Children Hospital, Amravati. All rights reserved.</div>
+        <div class="footer-privacy-note" data-i18n="footer_disclaimer">
           Medical Disclaimer: Educational guidance does not replace medical consultation.
         </div>
       </div>
@@ -439,34 +433,34 @@
   <div class="modal-overlay" id="child-modal" onclick="handleModalBackdropClick(event, 'child-modal')">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h3 class="modal-title">👶 Add New Child Profile</h3>
+        <h3 class="modal-title" data-i18n="add_child_modal_title">👶 Add New Child Profile</h3>
         <button class="modal-close-btn" onclick="closeModal('child-modal')">✕</button>
       </div>
       <form id="add-child-form" onsubmit="handleAddChildSubmit(event)">
         <div class="modal-body">
           <div class="form-row">
-            <label class="clean-label" for="child-name-input">Child's Full Name *</label>
-            <input type="text" id="child-name-input" class="clean-input" placeholder="e.g. Aarav Sharma" required />
+            <label class="clean-label" for="child-name-input" data-i18n="form_child_name">Child's Full Name *</label>
+            <input type="text" id="child-name-input" class="clean-input" placeholder="e.g. Aarav Sharma" data-i18n-placeholder="child_name_placeholder" required />
           </div>
 
           <div class="form-row-grid2">
             <div>
-              <label class="clean-label" for="child-dob-input">Date of Birth *</label>
+              <label class="clean-label" for="child-dob-input" data-i18n="form_dob">Date of Birth *</label>
               <input type="date" id="child-dob-input" class="clean-input" required />
             </div>
             <div>
-              <label class="clean-label" for="child-gender-input">Gender *</label>
+              <label class="clean-label" for="child-gender-input" data-i18n="form_gender">Gender *</label>
               <select id="child-gender-input" class="clean-select" required>
-                <option value="male">Boy 👦</option>
-                <option value="female">Girl 👧</option>
+                <option value="male" data-i18n="form_gender_male">Boy 👦</option>
+                <option value="female" data-i18n="form_gender_female">Girl 👧</option>
               </select>
             </div>
           </div>
 
           <div class="form-row">
-            <label class="clean-label" for="child-blood-input">Blood Group (optional)</label>
+            <label class="clean-label" for="child-blood-input" data-i18n="form_blood_group_optional">Blood Group (optional)</label>
             <select id="child-blood-input" class="clean-select">
-              <option value="Unknown">Not Sure / Unknown</option>
+              <option value="Unknown" data-i18n="blood_unknown">Not Sure / Unknown</option>
               <option value="A+">A Positive (A+)</option>
               <option value="A-">A Negative (A-)</option>
               <option value="B+">B Positive (B+)</option>
@@ -479,7 +473,7 @@
           </div>
 
           <div class="form-row">
-            <label class="clean-label">Choose Avatar Emoji:</label>
+            <label class="clean-label" data-i18n="avatar_choose">Choose Avatar Emoji:</label>
             <div class="avatar-picker-grid">
               <button type="button" class="avatar-btn active" data-avatar="👶" onclick="selectAvatar('👶', this)">👶</button>
               <button type="button" class="avatar-btn" data-avatar="👧" onclick="selectAvatar('👧', this)">👧</button>
@@ -491,8 +485,8 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn-pill-outline" onclick="closeModal('child-modal')">Cancel</button>
-          <button type="submit" class="btn-pill-primary">Save Child Profile</button>
+          <button type="button" class="btn-pill-outline" onclick="closeModal('child-modal')" data-i18n="form_cancel_btn">Cancel</button>
+          <button type="submit" class="btn-pill-primary" data-i18n="form_save_btn">Save Child Profile</button>
         </div>
       </form>
     </div>
